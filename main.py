@@ -65,7 +65,9 @@ class Utilities():
         return converedURL
 
 
-def start():
+def start(number=0):
+    if int(number) > 0:
+        sys.argv.append(number)
     webdriver_option = Utilities().web_options()
     driver = webdriver.Edge(options=webdriver_option)  # 调用chrome，调用命令行在括号内加options=options
     URL = "https://t.bilibili.com/topic/8807683/"  # fursuitfriday页面URL
@@ -98,8 +100,10 @@ def start():
     response = Utilities().urlDumper(lists, folder)  # 处理完毕的URL列表
 
     if len(Utilities().argvs()) != 1:
-        number = int(Utilities().argvs()[1])
-        while len(lists) < number:
+        argnum = int(Utilities().argvs()[1])
+        if argnum < len(lists):
+            response = response[:argnum]
+        while len(lists) < argnum:
             downloadedNumber = len(folder)
             dumpedNumber = len(lists)
             driver.execute_script('window.scrollTo(0,window.document.body.scrollHeight)')
@@ -108,9 +112,9 @@ def start():
             lists = soup.find_all("div", {'class': 'img-content'})  # 寻找带img-content类的div（含图片框）
             response = Utilities().urlDumper(lists, folder)  # 处理完毕的URL列表
             if len(response) >= dumpedNumber:
-                response = response[:number]
+                response = response[:argnum]
             else:
-                response = response[:(number - downloadedNumber - 1)]
+                response = response[:(argnum - downloadedNumber - 1)]
 
     driver.quit()  # 关闭浏览器 节省资源
 
@@ -122,7 +126,7 @@ def start():
     else:
         downloadProvider(False)
 
-    print("Done")
+    return response
 
 
 if os.path.exists("URLs.txt"):  # 删除已经存在的urls
