@@ -1,18 +1,30 @@
 # import json #启用该行以调用cookie登录
 import os
 import re
+import sys
+from wget import downloadProvider
 from bs4 import BeautifulSoup
 from selenium import webdriver
-import sys
 
 if os.path.exists("URLs.txt"):  # 删除已经存在的urls
     os.remove("URLs.txt")
+if not os.path.exists("images"):
+    os.mkdir("images")
 
 options = webdriver.ChromeOptions()
 arg = len(sys.argv)
 
 
-def urlDumper(beautifulsoup_response):
+def fileProvider(finalURL, folder):
+    index = finalURL.rfind("/") + 1
+    fileName = finalURL[index:]
+    if fileName not in folder:
+        return finalURL
+    else:
+        pass
+
+
+def urlDumper(beautifulsoup_response, folder, mode):
     rule = re.compile(r'[(](.*?)[)]', re.S)  # 筛选规则，提取括号内URL
     rawImageList = re.findall(rule, str(beautifulsoup_response))
     converedURL = []
@@ -21,10 +33,16 @@ def urlDumper(beautifulsoup_response):
         process2 = process1.find("@")
         process1 = process1[:process2]
         finalURL = process1.replace("//", "https://")
-        converedURL.append(finalURL)
-
+        if mode == "Differ":
+            callback = fileProvider(finalURL, folder)
+            if callback is not None:
+                converedURL.append(callback)
+        if mode == "Full":
+            converedURL.append(finalURL)
     return converedURL
 
+
+userMode = "Differ"
 
 if arg != 1:
     try:
@@ -36,6 +54,12 @@ if arg != 1:
         options = webdriver.ChromeOptions()
         print("wrong input")
 
+    try:
+        userMode = str(sys.argv[2])
+    except IndexError or ValueError:
+        pass
+if userMode == "Full":
+    print("Full mode detected")
 driver = webdriver.Chrome(options=options)  # 调用chrome，调用命令行在括号内加options=options
 URL = "https://t.bilibili.com/topic/8807683/"  # fursuitfriday页面URL
 driver.get(URL)
@@ -61,48 +85,33 @@ while arg == 1:
 webpage = driver.page_source  # 获取网页源代码
 
 soup = BeautifulSoup(webpage, "lxml")
-# print(soup.prettify())
 
-# print(soup.prettify())
-
+folder = os.listdir("images")
 lists = soup.find_all("div", {'class': 'img-content'})  # 寻找带img-content类的div（含图片框）
-response = urlDumper(lists)  # 处理完毕的URL列表
+response = urlDumper(lists, folder, "Full")  # 处理完毕的URL列表
 
 if arg != 1:
-    while len(response) < command:
+    while len(lists) < command:
+        downloadedNumber = len(folder)
+        dumpedNumber = len(lists)
         driver.execute_script('window.scrollTo(0,window.document.body.scrollHeight)')
-        driver.implicitly_wait(10)
         webpage = driver.page_source  # 获取网页源代码
-
         soup = BeautifulSoup(webpage, "lxml")
-        # print(soup.prettify())
-
-        # print(soup.prettify())
-
         lists = soup.find_all("div", {'class': 'img-content'})  # 寻找带img-content类的div（含图片框）
-        response = urlDumper(lists)  # 处理完毕的URL列表
-        response = response[:command]
+        response = urlDumper(lists, folder, userMode)  # 处理完毕的URL列表
+        if len(response) >= dumpedNumber:
+            response = response[:command]
+        else:
+            response = response[:(command - downloadedNumber - 1)]
 
 driver.quit()  # 关闭浏览器 节省资源
 
-with open("URLs.txt", "a+") as file:
-    for item in response:
-        file.write(item)
+if response:
+    with open("URLs.txt", "a+") as file:
+        for item in response:
+            file.write(item + "\n")
+    downloadProvider()
+else:
+    downloadProvider(False)
 
 print("Done")
-
-'''
-    下面的代码是python语言自带的下载器，会经常抽风，未启用
-'''
-# print(downloadList)
-# def downloader(downloadList):
-#     number = 1
-#     for file in downloadList:
-#         response = requests.get(file)
-#         filename = str(number) + str(file[-4:])
-#         with open(filename,"wb") as code:
-#             code.write(response.content)
-#         print(number)
-#         number += 1
-
-# downloader(downloadList)
