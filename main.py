@@ -14,8 +14,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 class Utilities():
     def __init__(self):
         self.options = Options()
-        self.arg = len(sys.argv)
-        if self.arg != 1:
+        self.arg = sys.argv
+        if len(self.arg) != 1:
             try:
                 self.options.add_argument("--headless")
                 self.options.add_argument("--disable-gpu")
@@ -28,10 +28,11 @@ class Utilities():
         return self.options
 
     def argvs(self):
-        return self.arg
+        if len(self.arg) > 0:
+            return self.arg
 
-    def loader(self):
-        while self.arg == 1:
+    def loader(self, driver):
+        while len(self.arg) == 1:
             userInput = str(input("更多？"))
             if userInput == ("y" or "Y"):
                 driver.execute_script('window.scrollTo(0,window.document.body.scrollHeight)')
@@ -63,9 +64,10 @@ class Utilities():
                 converedURL.append(finalURL)
         return converedURL
 
+
 def start():
-    driver = webdriver.Edge(r"C:\Users\admin\PycharmProjects\FurGUI\venv\Scripts\msedgedriver.exe",
-                            options=Utilities().web_options())  # 调用chrome，调用命令行在括号内加options=options
+    webdriver_option = Utilities().web_options()
+    driver = webdriver.Edge(options=webdriver_option)  # 调用chrome，调用命令行在括号内加options=options
     URL = "https://t.bilibili.com/topic/8807683/"  # fursuitfriday页面URL
     driver.get(URL)
 
@@ -85,17 +87,19 @@ def start():
     except EC.NoSuchElementException:
         print("No such element")
 
+    Utilities().loader(driver)
+
     webpage = driver.page_source  # 获取网页源代码
 
     soup = BeautifulSoup(webpage, "lxml")
 
     folder = os.listdir("images")
-    print(soup.prettify())
     lists = soup.find_all("div", {'class': 'img-content'})  # 寻找带img-content类的div（含图片框）
     response = Utilities().urlDumper(lists, folder)  # 处理完毕的URL列表
 
-    if Utilities().argvs() != 1:
-        while len(lists) < Utilities.command:
+    if len(Utilities().argvs()) != 1:
+        number = int(Utilities().argvs()[1])
+        while len(lists) < number:
             downloadedNumber = len(folder)
             dumpedNumber = len(lists)
             driver.execute_script('window.scrollTo(0,window.document.body.scrollHeight)')
@@ -104,9 +108,9 @@ def start():
             lists = soup.find_all("div", {'class': 'img-content'})  # 寻找带img-content类的div（含图片框）
             response = Utilities().urlDumper(lists, folder)  # 处理完毕的URL列表
             if len(response) >= dumpedNumber:
-                response = response[:Utilities.command]
+                response = response[:number]
             else:
-                response = response[:(Utilities.command - downloadedNumber - 1)]
+                response = response[:(number - downloadedNumber - 1)]
 
     driver.quit()  # 关闭浏览器 节省资源
 
@@ -128,4 +132,3 @@ if not os.path.exists("images"):
 
 if __name__ == "__main__":
     start()
-
