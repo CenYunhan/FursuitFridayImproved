@@ -8,14 +8,19 @@ from main import start
 class MainWindow(QMainWindow):
     @Slot()
     def hello(self):
-        r = start(self.ui.userInput.text())
-        a = ""
-        for items in r:
-            a = a + items + "\n"
+        check = self.ui.userInput.text()
+        r = []
+        if check:
+            r = start(check)
+            a = ""
+            for items in r:
+                a = a + items + "\n"
 
-        self.ui.textEdit.setText(a)
-        self.ui.excuteButton.setEnabled(False)
-        self.ui.excuteButton.setText("Done")
+            self.ui.textEdit.setText(a)
+            self.ui.excuteButton.setEnabled(False)
+            self.ui.excuteButton.setText("Done")
+        else:
+            self.ui.textEdit.setText("None")
 
     def __init__(self):
         super(MainWindow, self).__init__()
