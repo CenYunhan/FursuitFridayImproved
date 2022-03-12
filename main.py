@@ -55,10 +55,33 @@ class Utilities:
                 converedURL.append(finalURL)
         return converedURL
 
+    def _filter(self, response, keyword_1="", keyword_2="", reverse=False):
+        skipper = len(keyword_1)
+        response = str(response)
+        if reverse:
+            filterLeft = response.rfind(keyword_1)
+            if keyword_2 != "":
+                filterRight = response.find(keyword_2)
+            else:
+                filterRight = None
+        else:
+            filterLeft = response.find(keyword_1) + skipper + 1
+            filterRight = response.rfind(keyword_2)
+        return response[filterLeft:filterRight]
+
+    def runtime(self, lists, folder=[]):
+        convertedList = []
+        for item in lists:
+            information = {"user_name": self._filter(item.find_all("div", {"class": "user-name"}), '"_blank"', "</a>"),
+                           "image_url": self.urlDumper(item.find_all("div", {"class": "img-content"}), folder),
+                           "post_time": self._filter(item.find_all("div", {"class": "time"}), '"_blank"', "</a>")}
+            convertedList.append(information)
+        return convertedList
+
 
 def start(number=0):
-
-    if int(number) > 0:
+    number = int(number)
+    if number > 0:
         sys.argv.append(number)
     webdriver_option = Utilities().web_options()
     try:
@@ -92,8 +115,8 @@ def start(number=0):
     soup = BeautifulSoup(webpage, "lxml")
 
     folder = os.listdir("images")
-    lists = soup.find_all("div", {'class': 'img-content'})  # 寻找带img-content类的div（含图片框）
-    response = Utilities().urlDumper(lists, folder)  # 处理完毕的URL列表
+    lists = soup.find_all("div", {'class': 'main-content'})  # 寻找带img-content类的div（含图片框）
+    response = Utilities().runtime(lists, folder)  # 处理完毕的URL列表
 
     if len(sys.argv) != 1:
         required_number = int(sys.argv[1])
@@ -105,8 +128,8 @@ def start(number=0):
             driver.execute_script('window.scrollTo(0,window.document.body.scrollHeight)')
             webpage = driver.page_source  # 获取网页源代码
             soup = BeautifulSoup(webpage, "lxml")
-            lists = soup.find_all("div", {'class': 'img-content'})  # 寻找带img-content类的div（含图片框）
-            response = Utilities().urlDumper(lists, folder)  # 处理完毕的URL列表
+            lists = soup.find_all("div", {'class': 'main-content'})  # 寻找带img-content类的div（含图片框）
+            response = Utilities().runtime(lists, folder)  # 处理完毕的URL列表
             if len(response) >= dumpedNumber:
                 response = response[:required_number]
             else:
@@ -116,9 +139,13 @@ def start(number=0):
 
     if response:
         with open("URLs.txt", "a+") as file:
-            for item in response:
-                file.write(item + "\n")
-        downloadProvider()
+            for combined_item in response:
+                for item in combined_item["image_url"]:
+                    file.write(item + "\n")
+        if number > 0:
+            downloadProvider(False)
+        else:
+            downloadProvider()
     else:
         downloadProvider(False)
 
