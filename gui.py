@@ -52,8 +52,9 @@ class MainWindow(QMainWindow):
                         counter = ""
                     else:
                         counter = " " + str(count)
-                    file_extend_name = Utilities()._filter(response=url,keyword_1=".", reverse=True)
-                    file_name = combined_item["user_name"] + " " + combined_item["post_time"] + counter + file_extend_name
+                    file_extend_name = Utilities()._filter(response=url, keyword_1=".", reverse=True)
+                    file_name = combined_item["user_name"] + " " + combined_item[
+                        "post_time"] + counter + file_extend_name
                     command = "wget " + url + ' -O "images/' + file_name + '"'
                     os.system(command)
 
