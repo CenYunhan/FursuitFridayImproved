@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QGroupBox, QLineEdit, QMainWindow,
-    QPushButton, QSizePolicy, QTextEdit, QVBoxLayout,
-    QWidget)
+                               QPushButton, QSizePolicy, QTextEdit, QVBoxLayout,
+                               QWidget, QMessageBox)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -76,6 +76,8 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         QMetaObject.connectSlotsByName(MainWindow)
+
+        self.MessageBox = QMessageBox()
     # setupUi
 
     def retranslateUi(self, MainWindow):

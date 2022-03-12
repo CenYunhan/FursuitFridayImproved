@@ -14,25 +14,15 @@ from selenium.webdriver.support.wait import WebDriverWait
 class Utilities():
     def __init__(self):
         self.options = Options()
-        self.arg = sys.argv
-        if len(self.arg) != 1:
-            try:
-                self.options.add_argument("--headless")
-                self.options.add_argument("--disable-gpu")
-            except ValueError:
-                self.arg = 1
-                self.options = Options()
-                print("wrong input")
+        if len(sys.argv) != 1:
+            self.options.add_argument("--headless")
+            self.options.add_argument("--disable-gpu")
 
     def web_options(self):
         return self.options
 
-    def argvs(self):
-        if len(self.arg) > 0:
-            return self.arg
-
     def loader(self, driver):
-        while len(self.arg) == 1:
+        while len(sys.argv) == 1:
             userInput = str(input("更多？"))
             if userInput == ("y" or "Y"):
                 driver.execute_script('window.scrollTo(0,window.document.body.scrollHeight)')
@@ -66,6 +56,7 @@ class Utilities():
 
 
 def start(number=0):
+
     if int(number) > 0:
         sys.argv.append(number)
     webdriver_option = Utilities().web_options()
@@ -75,12 +66,12 @@ def start(number=0):
 
     '''
         网页cookie加载(备用)
-    '''
-    # with open('cookie.txt','r') as f:
-    #     cookieList = json.load(f)
-    #     for cookie in cookieList:
-    #         driver.add_cookie(cookie)
-    # driver.refresh()
+    with open('cookie.txt','r') as f:
+        cookieList = json.load(f)
+        for cookie in cookieList:
+             driver.add_cookie(cookie)
+    driver.refresh()
+     '''
 
     try:
         WebDriverWait(driver, timeout=10, poll_frequency=0.5).until(
@@ -88,6 +79,7 @@ def start(number=0):
         # 等待网页加载
     except EC.NoSuchElementException:
         print("No such element")
+        exit(1)
 
     Utilities().loader(driver)
 
@@ -99,11 +91,11 @@ def start(number=0):
     lists = soup.find_all("div", {'class': 'img-content'})  # 寻找带img-content类的div（含图片框）
     response = Utilities().urlDumper(lists, folder)  # 处理完毕的URL列表
 
-    if len(Utilities().argvs()) != 1:
-        argnum = int(Utilities().argvs()[1])
-        if argnum < len(lists):
-            response = response[:argnum]
-        while len(lists) < argnum:
+    if len(sys.argv) != 1:
+        required_number = int(sys.argv[1])
+        if required_number < len(lists):
+            response = response[:required_number]
+        while len(lists) < required_number:
             downloadedNumber = len(folder)
             dumpedNumber = len(lists)
             driver.execute_script('window.scrollTo(0,window.document.body.scrollHeight)')
@@ -112,9 +104,9 @@ def start(number=0):
             lists = soup.find_all("div", {'class': 'img-content'})  # 寻找带img-content类的div（含图片框）
             response = Utilities().urlDumper(lists, folder)  # 处理完毕的URL列表
             if len(response) >= dumpedNumber:
-                response = response[:argnum]
+                response = response[:required_number]
             else:
-                response = response[:(argnum - downloadedNumber - 1)]
+                response = response[:(required_number - downloadedNumber - 1)]
 
     driver.quit()  # 关闭浏览器 节省资源
 
