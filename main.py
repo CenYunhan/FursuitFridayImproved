@@ -2,6 +2,7 @@
 import os
 import re
 import sys
+import traceback
 from wget import downloadProvider
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -11,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 
-class Utilities():
+class Utilities:
     def __init__(self):
         self.options = Options()
         if len(sys.argv) != 1:
@@ -60,7 +61,10 @@ def start(number=0):
     if int(number) > 0:
         sys.argv.append(number)
     webdriver_option = Utilities().web_options()
-    driver = webdriver.Edge(options=webdriver_option)  # 调用chrome，调用命令行在括号内加options=options
+    try:
+        driver = webdriver.Edge(options=webdriver_option)  # 调用chrome，调用命令行在括号内加options=options
+    except:
+        exit(1)
     URL = "https://t.bilibili.com/topic/8807683/"  # fursuitfriday页面URL
     driver.get(URL)
 

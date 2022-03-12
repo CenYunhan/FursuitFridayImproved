@@ -1,7 +1,8 @@
 from PySide6.QtCore import Slot
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from murasakibat import Ui_MainWindow
 import sys
+import traceback
 from main import start
 
 
@@ -11,15 +12,19 @@ class MainWindow(QMainWindow):
         check = self.ui.userInput.text()
         r = []
         if check:
-            r = start(check)
-            a = ""
-            for items in r:
-                a = a + items + "\n"
-            self.ui.textEdit.setText(a)
+            try:
+                r = start(check)
+                a = ""
+                for items in r:
+                    a = a + items + "\n"
+                self.ui.textEdit.setText(a)
+                self.ui.excuteButton.setText("Done")
+            except:
+                self.ui.textEdit.setText(traceback.format_exc())
+                self.ui.excuteButton.setText("Error")
             self.ui.excuteButton.setEnabled(False)
-            self.ui.excuteButton.setText("Done")
         else:
-            self.ui.MessageBox.critical(QMainWindow(), "错误", "输个数字吧.....做个人好吗,debug真的很累的")
+            self.ui.MessageBox.critical(QMessageBox(), "错误", "焯")
 
     def __init__(self):
         super(MainWindow, self).__init__()
