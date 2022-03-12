@@ -12,24 +12,31 @@ class MainWindow(QMainWindow):
     @Slot()
     def hello(self):
         check = self.ui.userInput.text()
-        self.r = []
+        self.response = []
         if check:
             try:
-                self.r = start(check)
-                a = ""
-                print(self.r)
-                for items in self.r:
-                    a = a + "Up主： " + items["user_name"] + "\n"
-                    a = a + "图片地址： "
-                    if len(items["image_url"]) > 1:
-                        a = a + "\n"
-                    for url in items["image_url"]:
-                        a = a + url + "\n"
-                    a = a + "发布时间： " + items["post_time"] + "\n"
-                    a = a + "\n"
-                self.ui.textEdit.setText(a)
-                self.ui.excuteButton.setText("Done")
-                self.ui.downloadButton.setEnabled(True)
+                try:
+                    check = int(check)
+                except ValueError:
+                    check = 0
+                    self.ui.MessageBox.critical(QMessageBox(), "错误", "焯")
+                if check != 0:
+                    self.response = start(check)
+                    output = ""
+                    for items in self.response:
+                        output = output + "Up主： " + items["user_name"] + "\n"
+                        output = output + "图片地址： "
+                        if len(items["image_url"]) > 1:
+                            output = output + "\n"
+                        for url in items["image_url"]:
+                            output = output + url + "\n"
+                        output = output + "发布时间： " + items["post_time"] + "\n"
+                        output = output + "\n"
+                    self.ui.textEdit.setText(output)
+                    self.ui.excuteButton.setText("Done")
+                    self.ui.downloadButton.setEnabled(True)
+                else:
+                    pass
             except:
                 self.ui.textEdit.setTextColor("#FF0000")
                 self.ui.textEdit.setText(traceback.format_exc())
@@ -44,7 +51,7 @@ class MainWindow(QMainWindow):
         self.ui.downloadButton.setEnabled(False)
         self.ui.downloadButton.setText("Done")
         if os.path.exists("wget.exe"):
-            for combined_item in self.r:
+            for combined_item in self.response:
                 count = 0
                 for url in combined_item["image_url"]:
                     count += 1
@@ -60,7 +67,6 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.r = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.MessageBox = QMessageBox()
