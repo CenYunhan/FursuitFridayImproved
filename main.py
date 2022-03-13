@@ -13,9 +13,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 class Utilities:
     def __init__(self, driver):
         self.options = driver   # 加载对应浏览器驱动
-        if len(sys.argv) != 1:  # 当检测到传入数字时，不显示浏览器窗口(无头模式)
-            self.options.add_argument("--headless")
-            self.options.add_argument("--disable-gpu")
+        #if len(sys.argv) != 1:  # 当检测到传入数字时，不显示浏览器窗口(无头模式)
+            # self.options.add_argument("--headless")
+            # self.options.add_argument("--disable-gpu")
 
     def web_options(self):
         return self.options # 将最终的浏览器选项返回
