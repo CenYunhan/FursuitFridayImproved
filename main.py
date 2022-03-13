@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# import json #启用该行以调用cookie登录
 import os
 import re
 import sys
@@ -13,51 +12,40 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 class Utilities:
     def __init__(self, driver):
-        self.options = driver
-        if len(sys.argv) != 1:
+        self.options = driver   # 加载对应浏览器驱动
+        if len(sys.argv) != 1:  # 当检测到传入数字时，不显示浏览器窗口(无头模式)
             self.options.add_argument("--headless")
             self.options.add_argument("--disable-gpu")
 
     def web_options(self):
-        return self.options
+        return self.options # 将最终的浏览器选项返回
 
-    def loader(self, driver):
+    def loader(self, driver):   # 命令行版程序自由模式，可爬取网页上已加载的图片
         while len(sys.argv) == 1:
             userInput = str(input("更多？"))
             if userInput == ("y" or "Y"):
-                driver.execute_script('window.scrollTo(0,window.document.body.scrollHeight)')
+                driver.execute_script('window.scrollTo(0,window.document.body.scrollHeight)')   # 向下滚动页面
             else:
                 break
 
-    def fileProvider(self, finalURL, folder):
-        index = finalURL.rfind("/") + 1
-        fileName = finalURL[index:]
-        if fileName not in folder:
-            return finalURL
-        else:
-            pass
-
-    def urlDumper(self, beautifulsoup_response, folder=[]):
+    def urlDumper(self, beautifulsoup_response):
         rule = re.compile(r'[(](.*?)[)]', re.S)  # 筛选规则，提取括号内URL
         rawImageList = re.findall(rule, str(beautifulsoup_response))
         converedURL = []
         for raw in rawImageList:
-            process1 = raw.replace('"', "")
+            process1 = raw.replace('"', "")  # 从两侧引号中提取url
             process2 = process1.find("@")
-            process1 = process1[:process2]
-            finalURL = process1.replace("//", "https://")
-            if folder:
-                callback = self.fileProvider(finalURL, folder)
-                if callback is not None:
-                    converedURL.append(callback)
-            else:
-                converedURL.append(finalURL)
+            process1 = process1[:process2]   # process2用于加载原始图片地址
+            finalURL = process1.replace("//", "https://")   # 补全url
+            converedURL.append(finalURL)
         return converedURL
 
     def _filter(self, response, keyword_1="", keyword_2="", reverse=False):
+        # 提取器
         skipper = len(keyword_1)
         response = str(response)
         if reverse:
+            # 反向查找并提取
             filterLeft = response.rfind(keyword_1)
             if keyword_2 != "":
                 filterRight = response.find(keyword_2)
@@ -68,22 +56,24 @@ class Utilities:
             filterRight = response.rfind(keyword_2)
         return response[filterLeft:filterRight]
 
-    def runtime(self, lists, folder=[]):
+    def runtime(self, lists):
         convertedList = []
         for item in lists:
             information = {"user_name": self._filter(item.find_all("div", {"class": "user-name"}), '"_blank"', "</a>"),
-                           "image_url": self.urlDumper(item.find_all("div", {"class": "img-content"}), folder),
+                           "image_url": self.urlDumper(item.find_all("div", {"class": "img-content"})),
                            "post_time": self._filter(item.find_all("div", {"class": "time"}), '"_blank"', "</a>")}
             convertedList.append(information)
         return convertedList
 
 
 def start(browser, number=0):
+    # 程序的起点。默认要求的数量为0
     number = int(number)
     if number > 0:
         sys.argv.append(number)
 
     try:
+        # 浏览器的选择
         if browser == "Microsoft Edge":
             from selenium.webdriver.edge.options import Options
             webdriver_option = Utilities(Options()).web_options()
@@ -96,27 +86,17 @@ def start(browser, number=0):
             from selenium.webdriver.safari.options import Options
             webdriver_option = Utilities(Options()).web_options()
             driver = webdriver.Edge(options=webdriver_option)
-        # driver = webdriver.Edge(options=webdriver_option)  # 调用chrome，调用命令行在括号内加options=options
     except:
         sys.exit(1)
     URL = "https://t.bilibili.com/topic/8807683/"  # fursuitfriday页面URL
     driver.get(URL)
 
-    '''
-        网页cookie加载(备用)
-    with open('cookie.txt','r') as f:
-        cookieList = json.load(f)
-        for cookie in cookieList:
-             driver.add_cookie(cookie)
-    driver.refresh()
-     '''
-
     try:
+        # 等待网页加载
         WebDriverWait(driver, timeout=10, poll_frequency=0.5).until(
             EC.presence_of_all_elements_located((By.CLASS_NAME, "img-content")))
-        # 等待网页加载
     except EC.NoSuchElementException:
-        print("No such element")
+        print("未能找到任何的图片。程序退出。")
         exit(1)
 
     Utilities(Options()).loader(driver)
@@ -125,48 +105,45 @@ def start(browser, number=0):
 
     soup = BeautifulSoup(webpage, "lxml")
 
-    folder = os.listdir("images")
-    lists = soup.find_all("div", {'class': 'main-content'})  # 寻找带img-content类的div（含图片框）
-    response = Utilities(Options()).runtime(lists, folder)  # 处理完毕的URL列表
+    lists = soup.find_all("div", {'class': 'main-content'})  # 查找动态内容
+    response = Utilities(Options()).runtime(lists)  # 处理完毕的数据
 
     if len(sys.argv) != 1:
         required_number = int(sys.argv[1])
         if required_number < len(lists):
             response = response[:required_number]
         while len(lists) < required_number:
-            downloadedNumber = len(folder)
-            dumpedNumber = len(lists)
             driver.execute_script('window.scrollTo(0,window.document.body.scrollHeight)')
             webpage = driver.page_source  # 获取网页源代码
             soup = BeautifulSoup(webpage, "lxml")
-            lists = soup.find_all("div", {'class': 'main-content'})  # 寻找带img-content类的div（含图片框）
-            response = Utilities(Options()).runtime(lists, folder)  # 处理完毕的URL列表
-            if len(response) >= dumpedNumber:
+            lists = soup.find_all("div", {'class': 'main-content'})  # 同上
+            response = Utilities(Options()).runtime(lists)  # 同上
+            if len(response) >= required_number:
                 response = response[:required_number]
-            else:
-                response = response[:(required_number - downloadedNumber - 1)]
 
     driver.quit()  # 关闭浏览器 节省资源
 
     if response:
+        # 遍历返回的数据，写入文件
         with open("URLs.txt", "a+") as file:
             for combined_item in response:
                 for item in combined_item["image_url"]:
                     file.write(item + "\n")
+        # 当gui输入了数字，不调用wget.py
         if number > 0:
             downloadProvider(False)
         else:
             downloadProvider()
     else:
+        # 检测到列表为空时不启用下载器
         downloadProvider(False)
 
+    # 返回信息给gui
     return response
 
 
 if os.path.exists("URLs.txt"):  # 删除已经存在的urls
     os.remove("URLs.txt")
-if not os.path.exists("images"):
-    os.mkdir("images")
 
 if __name__ == "__main__":
-    start("Google Chrome")  # 默认为edge
+    start("Microsoft Edge")  # 默认为edge

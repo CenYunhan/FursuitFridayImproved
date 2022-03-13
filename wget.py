@@ -4,7 +4,7 @@ import os
 def downloadProvider(status=True):
     if status:
         if os.name == "nt" and os.path.exists("wget.exe"):
-            if input("Found wget.Download?(y/n)") == "y":
+            if input("找到了wget。是否下载图片? ") == "y":
                 os.system("wget -P images -i URLs.txt")
             else:
                 pass
@@ -12,6 +12,6 @@ def downloadProvider(status=True):
             code = os.system("wget -V")
             if code != 0:
                 print("It seems you don't install wget.")
-            elif input("Found wget.Download?(y/n)") == "y":
+            elif input("找到了wget。是否下载图片? ") == "y":
                 os.system("wget -P images -i URLs.txt")
 

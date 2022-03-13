@@ -56,6 +56,8 @@ class MainWindow(QMainWindow):
     def download(self):
         self.ui.downloadButton.setEnabled(False)
         self.ui.downloadButton.setText("Done")
+        if not os.path.exists("images"):
+            os.mkdir("images")
         if os.path.exists("wget.exe"):
             for combined_item in self.response:
                 count = 0
