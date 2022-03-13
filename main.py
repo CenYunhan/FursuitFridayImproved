@@ -108,6 +108,8 @@ def start(browser, number=0):
     lists = soup.find_all("div", {'class': 'main-content'})  # 查找动态内容
     response = Utilities(Options()).runtime(lists)  # 处理完毕的数据
 
+    ending = False
+
     if len(sys.argv) != 1:
         required_number = int(sys.argv[1])
         if required_number < len(lists):
@@ -118,6 +120,9 @@ def start(browser, number=0):
             soup = BeautifulSoup(webpage, "lxml")
             lists = soup.find_all("div", {'class': 'main-content'})  # 同上
             response = Utilities(Options()).runtime(lists)  # 同上
+            if len(soup.find_all("p", {"class": "end-text"})):
+                ending = True
+                break
             if len(response) >= required_number:
                 response = response[:required_number]
 
@@ -139,7 +144,7 @@ def start(browser, number=0):
         downloadProvider(False)
 
     # 返回信息给gui
-    return response
+    return response, ending
 
 
 if os.path.exists("URLs.txt"):  # 删除已经存在的urls

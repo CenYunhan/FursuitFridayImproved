@@ -26,8 +26,10 @@ class MainWindow(QMainWindow):
                     check = 0
                     self.ui.MessageBox.critical(QMessageBox(), "错误", "焯")
                 if check != 0:
-                    self.response = start(self.driver, check)
+                    self.response, ending_status = start(self.driver, check)
                     output = ""
+                    if ending_status:
+                        output = output + "指定数量大于网页拥有的图片。\n\n"
                     for items in self.response:
                         output = output + "Up主： " + items["user_name"] + "\n"
                         output = output + "图片地址： "
