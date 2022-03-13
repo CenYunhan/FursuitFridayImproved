@@ -1,20 +1,19 @@
+#!/usr/bin/python3
 # import json #启用该行以调用cookie登录
 import os
 import re
 import sys
-import traceback
 from wget import downloadProvider
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.edge.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 
 class Utilities:
-    def __init__(self):
-        self.options = Options()
+    def __init__(self, driver):
+        self.options = driver
         if len(sys.argv) != 1:
             self.options.add_argument("--headless")
             self.options.add_argument("--disable-gpu")
@@ -79,13 +78,25 @@ class Utilities:
         return convertedList
 
 
-def start(number=0):
+def start(browser, number=0):
     number = int(number)
     if number > 0:
         sys.argv.append(number)
-    webdriver_option = Utilities().web_options()
+
     try:
-        driver = webdriver.Edge(options=webdriver_option)  # 调用chrome，调用命令行在括号内加options=options
+        if browser == "Microsoft Edge":
+            from selenium.webdriver.edge.options import Options
+            webdriver_option = Utilities(Options()).web_options()
+            driver = webdriver.Edge(options=webdriver_option)
+        if browser == "Google Chrome":
+            from selenium.webdriver.chrome.options import Options
+            webdriver_option = Utilities(Options()).web_options()
+            driver = webdriver.Chrome(options=webdriver_option)
+        if browser == "Apple Safari":
+            from selenium.webdriver.safari.options import Options
+            webdriver_option = Utilities(Options()).web_options()
+            driver = webdriver.Edge(options=webdriver_option)
+        # driver = webdriver.Edge(options=webdriver_option)  # 调用chrome，调用命令行在括号内加options=options
     except:
         sys.exit(1)
     URL = "https://t.bilibili.com/topic/8807683/"  # fursuitfriday页面URL
@@ -108,7 +119,7 @@ def start(number=0):
         print("No such element")
         exit(1)
 
-    Utilities().loader(driver)
+    Utilities(Options()).loader(driver)
 
     webpage = driver.page_source  # 获取网页源代码
 
@@ -116,7 +127,7 @@ def start(number=0):
 
     folder = os.listdir("images")
     lists = soup.find_all("div", {'class': 'main-content'})  # 寻找带img-content类的div（含图片框）
-    response = Utilities().runtime(lists, folder)  # 处理完毕的URL列表
+    response = Utilities(Options()).runtime(lists, folder)  # 处理完毕的URL列表
 
     if len(sys.argv) != 1:
         required_number = int(sys.argv[1])
@@ -129,7 +140,7 @@ def start(number=0):
             webpage = driver.page_source  # 获取网页源代码
             soup = BeautifulSoup(webpage, "lxml")
             lists = soup.find_all("div", {'class': 'main-content'})  # 寻找带img-content类的div（含图片框）
-            response = Utilities().runtime(lists, folder)  # 处理完毕的URL列表
+            response = Utilities(Options()).runtime(lists, folder)  # 处理完毕的URL列表
             if len(response) >= dumpedNumber:
                 response = response[:required_number]
             else:
@@ -158,4 +169,4 @@ if not os.path.exists("images"):
     os.mkdir("images")
 
 if __name__ == "__main__":
-    start()
+    start("Google Chrome")  # 默认为edge

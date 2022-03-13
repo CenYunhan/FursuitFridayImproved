@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGroupBox, QHBoxLayout, QLineEdit,
-    QMainWindow, QPushButton, QSizePolicy, QTextEdit,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QGroupBox, QHBoxLayout,
+    QLineEdit, QMainWindow, QPushButton, QSizePolicy,
+    QTextEdit, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -86,6 +86,17 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addLayout(self.verticalLayout_2)
 
+        self.comboBox = QComboBox(self.toolBar)
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.setObjectName(u"comboBox")
+        sizePolicy.setHeightForWidth(self.comboBox.sizePolicy().hasHeightForWidth())
+        self.comboBox.setSizePolicy(sizePolicy)
+
+        self.verticalLayout_3.addWidget(self.comboBox)
+
 
         self.verticalLayout_5.addWidget(self.toolBar)
 
@@ -104,5 +115,10 @@ class Ui_MainWindow(object):
         self.userInput.setText("")
         self.excuteButton.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u59cb", None))
         self.downloadButton.setText(QCoreApplication.translate("MainWindow", u"\u4e0b\u8f7d", None))
+        self.comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"--\u8bf7\u9009\u62e9\u6d4f\u89c8\u5668--", None))
+        self.comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Microsoft Edge", None))
+        self.comboBox.setItemText(2, QCoreApplication.translate("MainWindow", u"Google Chrome", None))
+        self.comboBox.setItemText(3, QCoreApplication.translate("MainWindow", u"Apple Safari", None))
+
     # retranslateUi
 

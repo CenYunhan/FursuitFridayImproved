@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import os
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
@@ -10,7 +11,11 @@ from main import Utilities
 
 class MainWindow(QMainWindow):
     @Slot()
-    def hello(self):
+    def driver_select(self, driver):
+        self.driver = driver
+
+    @Slot()
+    def main(self):
         check = self.ui.userInput.text()
         self.response = []
         if check:
@@ -21,7 +26,7 @@ class MainWindow(QMainWindow):
                     check = 0
                     self.ui.MessageBox.critical(QMessageBox(), "错误", "焯")
                 if check != 0:
-                    self.response = start(check)
+                    self.response = start(self.driver, check)
                     output = ""
                     for items in self.response:
                         output = output + "Up主： " + items["user_name"] + "\n"
@@ -43,6 +48,7 @@ class MainWindow(QMainWindow):
                 self.ui.excuteButton.setText("Error")
             finally:
                 self.ui.excuteButton.setEnabled(False)
+                self.ui.comboBox.setEnabled(False)
         else:
             self.ui.MessageBox.critical(QMessageBox(), "错误", "焯")
 
@@ -67,13 +73,16 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.driver = None
+        self.response = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.MessageBox = QMessageBox()
         self.ui.downloadButton.setEnabled(False)
-        self.ui.excuteButton.clicked.connect(self.hello)
+        self.ui.excuteButton.clicked.connect(self.main)
         self.ui.downloadButton.clicked.connect(self.download)
-        self.ui.userInput.returnPressed.connect(self.hello)
+        self.ui.userInput.returnPressed.connect(self.main)
+        self.ui.comboBox.currentTextChanged.connect(self.driver_select)
 
 
 if __name__ == "__main__":
