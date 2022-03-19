@@ -7,6 +7,7 @@ import sys
 import traceback
 from main import start
 from main import Utilities
+import qdarkstyle
 
 
 class MainWindow(QMainWindow):
@@ -89,6 +90,7 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setStyleSheet(qdarkstyle.load_stylesheet())
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
