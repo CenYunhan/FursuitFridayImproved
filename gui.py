@@ -11,14 +11,14 @@ from main import Utilities
 
 class MainWindow(QMainWindow):
     @Slot()
-    def driver_select(self, driver):
-        self.driver = driver
+    def raise_messagebox(self):
+        self.ui.MessageBox.critical(QMessageBox(), "错误", "焯")
 
     @Slot()
     def main(self):
         check = self.ui.userInput.text()
         self.response = []
-        if check:
+        if check and self.ui.comboBox.currentText() != "--请选择浏览器--":
             try:
                 try:
                     check = int(check)
@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
                     check = 0
                     self.ui.MessageBox.critical(QMessageBox(), "错误", "焯")
                 if check != 0:
-                    self.response, ending_status = start(self.driver, check)
+                    self.response, ending_status = start(self.ui.comboBox.currentText(), check)
                     output = ""
                     if ending_status:
                         output = output + "指定数量大于网页拥有的图片。\n\n"
@@ -52,8 +52,7 @@ class MainWindow(QMainWindow):
                 self.ui.excuteButton.setEnabled(False)
                 self.ui.comboBox.setEnabled(False)
         else:
-            self.ui.MessageBox.critical(QMessageBox(), "错误", "焯")
-
+            self.raise_messagebox()
     @Slot()
     def download(self):
         self.ui.downloadButton.setEnabled(False)
@@ -86,7 +85,6 @@ class MainWindow(QMainWindow):
         self.ui.excuteButton.clicked.connect(self.main)
         self.ui.downloadButton.clicked.connect(self.download)
         self.ui.userInput.returnPressed.connect(self.main)
-        self.ui.comboBox.currentTextChanged.connect(self.driver_select)
 
 
 if __name__ == "__main__":
