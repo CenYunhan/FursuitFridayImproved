@@ -11,20 +11,20 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 class Utilities:
-    def __init__(self, driver):
-        self.options = driver   # 加载对应浏览器驱动
-        if len(sys.argv) != 1:  # 当检测到传入数字时，不显示浏览器窗口(无头模式)
+    def __init__(self, driver=False):
+        self.options = driver  # 加载对应浏览器驱动
+        if len(sys.argv) != 1 and driver != False:  # 当检测到传入数字时，不显示浏览器窗口(无头模式)
             self.options.add_argument("--headless")
             self.options.add_argument("--disable-gpu")
 
     def web_options(self):
-        return self.options # 将最终的浏览器选项返回
+        return self.options  # 将最终的浏览器选项返回
 
-    def loader(self, driver):   # 命令行版程序自由模式，可爬取网页上已加载的图片
+    def loader(self, driver):  # 命令行版程序自由模式，可爬取网页上已加载的图片
         while len(sys.argv) == 1:
             userInput = str(input("更多？"))
             if userInput == ("y" or "Y"):
-                driver.execute_script('window.scrollTo(0,window.document.body.scrollHeight)')   # 向下滚动页面
+                driver.execute_script('window.scrollTo(0,window.document.body.scrollHeight)')  # 向下滚动页面
             else:
                 break
 
@@ -35,8 +35,8 @@ class Utilities:
         for raw in rawImageList:
             process1 = raw.replace('"', "")  # 从两侧引号中提取url
             process2 = process1.find("@")
-            process1 = process1[:process2]   # process2用于加载原始图片地址
-            finalURL = process1.replace("//", "https://")   # 补全url
+            process1 = process1[:process2]  # process2用于加载原始图片地址
+            finalURL = process1.replace("//", "https://")  # 补全url
             converedURL.append(finalURL)
         return converedURL
 
