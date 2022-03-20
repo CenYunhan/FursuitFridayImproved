@@ -57,10 +57,9 @@ class MainWindow(QMainWindow):
     @Slot()
     def download(self):
         self.ui.downloadButton.setEnabled(False)
-        self.ui.downloadButton.setText("Done")
         if not os.path.exists("images"):
             os.mkdir("images")
-        if os.path.exists("wget.exe"):
+        if os.path.exists("wget.exe" or "wget"):
             for combined_item in self.response:
                 count = 0
                 for url in combined_item["image_url"]:
@@ -74,6 +73,10 @@ class MainWindow(QMainWindow):
                         "post_time"] + counter + file_extend_name
                     command = "wget " + url + ' -O "images/' + file_name + '"'
                     os.system(command)
+            self.ui.downloadButton.setText("Done")
+        else:
+            self.raise_messagebox()
+            self.ui.downloadButton.setText("未找到wget")
 
     def __init__(self):
         super(MainWindow, self).__init__()
