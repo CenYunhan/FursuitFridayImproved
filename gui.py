@@ -17,17 +17,18 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def main(self):
-        check = self.ui.userInput.text()
+        required_num = self.ui.userInput.text()
         self.response = []
-        if check and self.ui.comboBox.currentText() != "--请选择浏览器--":
+        if required_num and self.ui.comboBox.currentText() != "--请选择浏览器--":
             try:
                 try:
-                    check = int(check)
+                    check = int(required_num)
                 except ValueError:
                     check = 0
                     self.ui.MessageBox.critical(QMessageBox(), "错误", "焯")
                 if check != 0:
-                    self.response, ending_status = start(self.ui.comboBox.currentText(), check)
+                    self.response, ending_status = start(
+                        self.ui.comboBox.currentText(), required_num, self.ui.URLAddress.text())
                     output = ""
                     if ending_status:
                         output = output + "指定数量大于网页拥有的图片。\n\n"
@@ -54,6 +55,7 @@ class MainWindow(QMainWindow):
                 self.ui.comboBox.setEnabled(False)
         else:
             self.raise_messagebox()
+
     @Slot()
     def download(self):
         self.ui.downloadButton.setEnabled(False)

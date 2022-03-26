@@ -13,7 +13,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 class Utilities:
     def __init__(self, driver=False):
         self.options = driver  # 加载对应浏览器驱动
-        if len(sys.argv) != 1 and driver != False:  # 当检测到传入数字时，不显示浏览器窗口(无头模式)
+        if len(sys.argv) != 1 and driver is not False:  # 当检测到传入数字时，不显示浏览器窗口(无头模式)
             self.options.add_argument("--headless")
             self.options.add_argument("--disable-gpu")
 
@@ -65,8 +65,10 @@ class Utilities:
             convertedList.append(information)
         return convertedList
 
+defaultURL = "https://t.bilibili.com/topic/8807683/"  # fursuitfriday页面URL
 
-def start(browser, number=0):
+
+def start(browser, number=0, URL=defaultURL):
     # 程序的起点。默认要求的数量为0
     number = int(number)
     if number > 0:
@@ -88,7 +90,6 @@ def start(browser, number=0):
             driver = webdriver.Edge(options=webdriver_option)
     except:
         sys.exit(1)
-    URL = "https://t.bilibili.com/topic/8807683/"  # fursuitfriday页面URL
     driver.get(URL)
 
     try:

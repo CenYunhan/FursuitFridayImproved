@@ -15,15 +15,15 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QGroupBox, QHBoxLayout,
-    QLineEdit, QMainWindow, QPushButton, QSizePolicy,
-    QTextEdit, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QGroupBox,
+    QHBoxLayout, QLineEdit, QMainWindow, QPushButton,
+    QSizePolicy, QTextEdit, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(345, 382)
+        MainWindow.resize(288, 457)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -53,17 +53,8 @@ class Ui_MainWindow(object):
         self.toolBar.setObjectName(u"toolBar")
         sizePolicy.setHeightForWidth(self.toolBar.sizePolicy().hasHeightForWidth())
         self.toolBar.setSizePolicy(sizePolicy)
-        self.verticalLayout_3 = QVBoxLayout(self.toolBar)
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.verticalLayout_2 = QVBoxLayout()
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.userInput = QLineEdit(self.toolBar)
-        self.userInput.setObjectName(u"userInput")
-        sizePolicy1.setHeightForWidth(self.userInput.sizePolicy().hasHeightForWidth())
-        self.userInput.setSizePolicy(sizePolicy1)
-
-        self.verticalLayout_2.addWidget(self.userInput)
-
+        self.gridLayout = QGridLayout(self.toolBar)
+        self.gridLayout.setObjectName(u"gridLayout")
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.excuteButton = QPushButton(self.toolBar)
@@ -81,10 +72,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.downloadButton)
 
 
-        self.verticalLayout_2.addLayout(self.horizontalLayout)
-
-
-        self.verticalLayout_3.addLayout(self.verticalLayout_2)
+        self.gridLayout.addLayout(self.horizontalLayout, 5, 0, 1, 1)
 
         self.comboBox = QComboBox(self.toolBar)
         self.comboBox.addItem("")
@@ -95,7 +83,37 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.comboBox.sizePolicy().hasHeightForWidth())
         self.comboBox.setSizePolicy(sizePolicy)
 
-        self.verticalLayout_3.addWidget(self.comboBox)
+        self.gridLayout.addWidget(self.comboBox, 6, 0, 1, 1)
+
+        self.groupBox_2 = QGroupBox(self.toolBar)
+        self.groupBox_2.setObjectName(u"groupBox_2")
+        self.horizontalLayout_2 = QHBoxLayout(self.groupBox_2)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.userInput = QLineEdit(self.groupBox_2)
+        self.userInput.setObjectName(u"userInput")
+        sizePolicy1.setHeightForWidth(self.userInput.sizePolicy().hasHeightForWidth())
+        self.userInput.setSizePolicy(sizePolicy1)
+
+        self.horizontalLayout_2.addWidget(self.userInput)
+
+
+        self.gridLayout.addWidget(self.groupBox_2, 0, 0, 1, 1)
+
+        self.groupBox_3 = QGroupBox(self.toolBar)
+        self.groupBox_3.setObjectName(u"groupBox_3")
+        self.horizontalLayout_3 = QHBoxLayout(self.groupBox_3)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.URLAddress = QLineEdit(self.groupBox_3)
+        self.URLAddress.setObjectName(u"URLAddress")
+        sizePolicy1.setHeightForWidth(self.URLAddress.sizePolicy().hasHeightForWidth())
+        self.URLAddress.setSizePolicy(sizePolicy1)
+        self.URLAddress.setMinimumSize(QSize(128, 0))
+        self.URLAddress.setDragEnabled(False)
+
+        self.horizontalLayout_3.addWidget(self.URLAddress)
+
+
+        self.gridLayout.addWidget(self.groupBox_3, 3, 0, 1, 1)
 
 
         self.verticalLayout_5.addWidget(self.toolBar)
@@ -112,7 +130,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"\u6bdb\u56fe", None))
-        self.userInput.setText("")
+        self.toolBar.setTitle("")
         self.excuteButton.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u59cb", None))
         self.downloadButton.setText(QCoreApplication.translate("MainWindow", u"\u4e0b\u8f7d", None))
         self.comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"--\u8bf7\u9009\u62e9\u6d4f\u89c8\u5668--", None))
@@ -120,5 +138,9 @@ class Ui_MainWindow(object):
         self.comboBox.setItemText(2, QCoreApplication.translate("MainWindow", u"Google Chrome", None))
         self.comboBox.setItemText(3, QCoreApplication.translate("MainWindow", u"Apple Safari", None))
 
+        self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"\u6570\u91cf", None))
+        self.userInput.setText("")
+        self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"URL", None))
+        self.URLAddress.setText(QCoreApplication.translate("MainWindow", u"https://t.bilibili.com/topic/8807683/", None))
     # retranslateUi
 
