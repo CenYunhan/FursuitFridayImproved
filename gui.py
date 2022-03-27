@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from murasakibat import Ui_MainWindow
 import sys
 import traceback
+from urllib.request import urlretrieve
 from main import start
 from main import Utilities
 import qdarkstyle
@@ -61,24 +62,20 @@ class MainWindow(QMainWindow):
         self.ui.downloadButton.setEnabled(False)
         if not os.path.exists("images"):
             os.mkdir("images")
-        if os.path.exists("wget.exe" or "wget"):
-            for combined_item in self.response:
-                count = 0
-                for url in combined_item["image_url"]:
-                    count += 1
-                    if len(combined_item["image_url"]) == (0 or 1):
-                        counter = ""
-                    else:
-                        counter = " " + str(count)
-                    file_extend_name = Utilities()._filter(response=url, keyword_1=".", reverse=True)
-                    file_name = combined_item["user_name"] + " " + combined_item[
-                        "post_time"] + counter + file_extend_name
-                    command = "wget " + url + ' -O "images/' + file_name + '"'
-                    os.system(command)
-            self.ui.downloadButton.setText("Done")
-        else:
-            self.raise_messagebox()
-            self.ui.downloadButton.setText("未找到wget")
+        for combined_item in self.response:
+            count = 0
+            for url in combined_item["image_url"]:
+                count += 1
+                if len(combined_item["image_url"]) == (0 or 1):
+                    counter = ""
+                else:
+                    counter = " " + str(count)
+                file_extend_name = Utilities()._filter(response=url, keyword_1=".", reverse=True)
+                file_name = combined_item["user_name"] + " " + combined_item[
+                    "post_time"] + counter + file_extend_name
+                path = os.path.abspath("images")
+                urlretrieve(url, os.path.join(path, file_name))
+        self.ui.downloadButton.setText("Done")
 
     def __init__(self):
         super(MainWindow, self).__init__()

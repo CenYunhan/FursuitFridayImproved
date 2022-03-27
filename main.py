@@ -2,7 +2,6 @@
 import os
 import re
 import sys
-from wget import downloadProvider
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -64,6 +63,7 @@ class Utilities:
                            "post_time": self._filter(item.find_all("div", {"class": "time"}), '"_blank"', "</a>")}
             convertedList.append(information)
         return convertedList
+
 
 defaultURL = "https://t.bilibili.com/topic/8807683/"  # fursuitfriday页面URL
 
@@ -130,19 +130,10 @@ def start(browser, number=0, URL=defaultURL):
     driver.quit()  # 关闭浏览器 节省资源
 
     if response:
-        # 遍历返回的数据，写入文件
         with open("URLs.txt", "a+") as file:
             for combined_item in response:
                 for item in combined_item["image_url"]:
                     file.write(item + "\n")
-        # 当gui输入了数字，不调用wget.py
-        if number > 0:
-            downloadProvider(False)
-        else:
-            downloadProvider()
-    else:
-        # 检测到列表为空时不启用下载器
-        downloadProvider(False)
 
     # 返回信息给gui
     return response, ending
