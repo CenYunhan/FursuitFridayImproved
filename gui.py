@@ -2,12 +2,12 @@
 import os
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
-from murasakibat import Ui_MainWindow
+from ui import Ui_MainWindow
 import sys
 import traceback
 from urllib.request import urlretrieve
 from main import start
-from main import Utilities
+from main import _filter
 import qdarkstyle
 
 
@@ -70,7 +70,7 @@ class MainWindow(QMainWindow):
                     counter = ""
                 else:
                     counter = " " + str(count)
-                file_extend_name = Utilities()._filter(response=url, keyword_1=".", reverse=True)
+                file_extend_name = _filter(response=url, keyword_1=".", reverse=True)
                 file_name = combined_item["user_name"] + " " + combined_item[
                     "post_time"] + counter + file_extend_name
                 path = os.path.abspath("images")
