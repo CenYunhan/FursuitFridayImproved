@@ -105,6 +105,11 @@
               <string>Google Chrome</string>
              </property>
             </item>
+            <item>
+             <property name="text">
+              <string>Mozilla Firefox</string>
+             </property>
+            </item>
            </widget>
           </item>
           <item row="0" column="0">

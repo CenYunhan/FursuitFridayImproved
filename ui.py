@@ -78,6 +78,7 @@ class Ui_MainWindow(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
+        self.comboBox.addItem("")
         self.comboBox.setObjectName(u"comboBox")
         sizePolicy.setHeightForWidth(self.comboBox.sizePolicy().hasHeightForWidth())
         self.comboBox.setSizePolicy(sizePolicy)
@@ -135,6 +136,7 @@ class Ui_MainWindow(object):
         self.comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"--\u8bf7\u9009\u62e9\u6d4f\u89c8\u5668--", None))
         self.comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Microsoft Edge", None))
         self.comboBox.setItemText(2, QCoreApplication.translate("MainWindow", u"Google Chrome", None))
+        self.comboBox.setItemText(3, QCoreApplication.translate("MainWindow", u"Mozilla Firefox", None))
 
         self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"\u6570\u91cf", None))
         self.userInput.setText("")

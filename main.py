@@ -75,6 +75,10 @@ def start(browser, number=0, URL=defaultURL):
         from selenium.webdriver.chrome.options import Options
         webdriver_option = web_options(Options())
         driver = webdriver.Chrome(options=webdriver_option)
+    if browser == "Mozilla Firefox":
+        from selenium.webdriver.firefox.options import Options
+        webdriver_option = web_options(Options())
+        driver = webdriver.Firefox(options=webdriver_option)
     driver.get(URL)
 
     try:
@@ -100,6 +104,7 @@ def start(browser, number=0, URL=defaultURL):
     ending = False
 
     if len(sys.argv) > 1:
+        required_number: int  # 意图
         required_number = int(sys.argv[1])
         if required_number < len(lists):
             response = response[:required_number]
