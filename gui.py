@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+ #!/usr/bin/python3
 import os
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
                     check = int(required_num)
                 except ValueError:
                     check = 0
-                    self.ui.MessageBox.critical(QMessageBox(), "错误", "焯")
+                    self.raise_messagebox()
                 if check != 0:
                     self.response, ending_status = start(
                         self.ui.comboBox.currentText(), required_num, self.ui.URLAddress.text())
