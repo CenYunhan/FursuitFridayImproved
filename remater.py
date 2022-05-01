@@ -1,6 +1,7 @@
 import json
 import os
 import requests
+import time
 from urllib.request import urlretrieve
 
 
@@ -14,7 +15,7 @@ def download(order):
             else:
                 counter = " " + str(count)
             file_extend_name = url[url.rfind("."):]
-            file_name = combined_item["name"] + counter + file_extend_name
+            file_name = combined_item["name"] + " " + combined_item['time'] + counter + file_extend_name
             path = os.path.abspath("images")
             urlretrieve(url, os.path.join(path, file_name))
 
@@ -37,9 +38,12 @@ def dumper(xhr, num):
                 images_temp.append(img_src)
                 image_count += 1
             user_name = card['user']['name']
+            timestamp = card['item']['upload_time']
+            upload_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(timestamp))
             profile = {
                 'name': user_name,
-                'images': images_temp
+                'images': images_temp,
+                'time': upload_time
             }
             results.append(profile)
         except KeyError:
