@@ -4,6 +4,21 @@ import requests
 from urllib.request import urlretrieve
 
 
+def download(order):
+    for combined_item in order:
+        count = 0
+        for url in combined_item["images"]:
+            count += 1
+            if len(combined_item["images"]) == 1:
+                counter = ""
+            else:
+                counter = " " + str(count)
+            file_extend_name = url[url.rfind("."):]
+            file_name = combined_item["name"] + counter + file_extend_name
+            path = os.path.abspath("images")
+            urlretrieve(url, os.path.join(path, file_name))
+
+
 def dumper(xhr, num):
     global results, image_count
 
@@ -43,9 +58,7 @@ web = requests.get(basic_api_url)
 image_count = 0
 xhr = web.json()
 dumper(xhr, int(input("数量？ ")))
-for item in results:
-    for url in item["images"]:
-        urlretrieve(url, os.path.abspath("images") + url[url.rfind("/"):])
+download(results)
 # print(results)
 # count = 0
 # for item in results:
