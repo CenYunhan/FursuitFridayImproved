@@ -62,21 +62,26 @@ def dumper(xhr, num, thumbnail=False):
     if image_count < num:
         history_url = history_api_url + "topic_id=" + topic_id + "&offset_dynamic_id=" + offset
         history = requests.get(history_url).json()
-        dumper(history, num)
+        if thumbnail:
+            dumper(history, num, True)
+        else:
+            dumper(history, num)
 
 
-def main(number=0):
+def main():
     web = requests.get(basic_api_url)
     xhr = web.json()
-    if number == 0:
-        try:
-            number = int(input("数量？ "))
-        except ValueError:
-            print("请输入正确的数量")
+    try:
+        number = int(input("数量？ "))
+    except ValueError:
+        print("请输入正确的数量")
     dumper(xhr, number)
 
 
 def interface(number):
+    global results, image_count
+    results = []
+    image_count = 0
     web = requests.get(basic_api_url)
     xhr = web.json()
     dumper(xhr, number, thumbnail=True)
