@@ -89,8 +89,8 @@ class MainWindow(QMainWindow):
             exec(photo_status)
 
     @Slot()
-    def ui_download(self):
-        #for value in range(1, 10):
+    #def ui_download(self):
+        # for value in range(1, 10):
         #    photo_status = ("print(" + str(value) + ") if self.ui.checkBox_" +
         #                    str(value) + ".isChecked()")
         #    exec(photo_status)
