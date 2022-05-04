@@ -5,6 +5,7 @@ import time
 from urllib.request import urlretrieve
 
 results = []
+thumbnails = []
 image_count = 0
 topic_id = "8807683"
 basic_api_url = "https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_id=" + topic_id
@@ -26,11 +27,12 @@ def download(order):
             file_extend_name = url[url.rfind("."):]
             file_name = combined_item["name"] + " " + combined_item['time'] + counter + file_extend_name
             path = os.path.abspath("images")
-            urlretrieve(url, os.path.join(path, file_name))
+            full_name = os.path.join(path, file_name)
+            urlretrieve(url, full_name)
 
 
 def dumper(xhr, num, thumbnail=False):
-    global results, image_count
+    global results, thumbnails, image_count
 
     xhr_data = xhr["data"]
     offset = xhr_data['offset']
@@ -40,13 +42,15 @@ def dumper(xhr, num, thumbnail=False):
         card = json.loads(source["card"])
         try:
             images_temp = []
+            thumbnail_temp = []
             for picture in card["item"]["pictures"]:
                 if image_count >= num:
                     break
                 img_src = picture["img_src"]
-                if thumbnail:
-                    img_src += "@104w_104h.webp"
                 images_temp.append(img_src)
+                if thumbnail:
+                    img_thumbnail = img_src + "@104w_104h.webp"
+                    thumbnail_temp.append(img_thumbnail)
                 image_count += 1
             user_name = card['user']['name']
             timestamp = card['item']['upload_time']
@@ -56,7 +60,11 @@ def dumper(xhr, num, thumbnail=False):
                 'images': images_temp,
                 'time': upload_time
             }
+            thumbnail_profile = {
+                'images': thumbnail_temp
+            }
             results.append(profile)
+            thumbnails.append(thumbnail_profile)
         except KeyError:
             pass
     if image_count < num:
@@ -75,17 +83,19 @@ def main():
         number = int(input("数量？ "))
     except ValueError:
         print("请输入正确的数量")
+        exit()
     dumper(xhr, number)
 
 
 def interface(number):
-    global results, image_count
+    global results, image_count, thumbnails
     results = []
+    thumbnails = []
     image_count = 0
     web = requests.get(basic_api_url)
     xhr = web.json()
     dumper(xhr, number, thumbnail=True)
-    return results
+    return [thumbnails, results]
 
 
 if __name__ == "__main__":

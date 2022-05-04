@@ -388,8 +388,8 @@
    <widget class="QMenu" name="menu">
     <property name="geometry">
      <rect>
-      <x>446</x>
-      <y>259</y>
+      <x>490</x>
+      <y>197</y>
       <width>99</width>
       <height>110</height>
      </rect>
@@ -419,7 +419,7 @@
   </action>
   <action name="actionclose">
    <property name="text">
-    <string>close</string>
+    <string>关闭</string>
    </property>
   </action>
  </widget>

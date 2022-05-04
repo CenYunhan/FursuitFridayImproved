@@ -240,7 +240,7 @@ class Ui_MainWindow(object):
         self.menuBar.setGeometry(QRect(0, 0, 476, 24))
         self.menu = QMenu(self.menuBar)
         self.menu.setObjectName(u"menu")
-        self.menu.setGeometry(QRect(446, 259, 99, 110))
+        self.menu.setGeometry(QRect(490, 197, 99, 110))
         MainWindow.setMenuBar(self.menuBar)
 
         self.menuBar.addAction(self.menu.menuAction())
@@ -261,7 +261,7 @@ class Ui_MainWindow(object):
         self.action_download.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+S", None))
 #endif // QT_CONFIG(shortcut)
         self.action_about.setText(QCoreApplication.translate("MainWindow", u"\u5173\u4e8e", None))
-        self.actionclose.setText(QCoreApplication.translate("MainWindow", u"close", None))
+        self.actionclose.setText(QCoreApplication.translate("MainWindow", u"\u5173\u95ed", None))
         self.label_1.setText("")
         self.label_2.setText("")
         self.label_3.setText("")
