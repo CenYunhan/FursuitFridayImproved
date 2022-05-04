@@ -19,23 +19,9 @@ class MainWindow(QMainWindow):
         if not os.path.exists("temp"):
             os.mkdir("temp")
         current_thumbnail = []
-        images_temp = []
-        index = 0
         for member in thumbnails:
             for thumbnail in member["images"]:
                 current_thumbnail.append(thumbnail)
-        for item in data:
-            print(item)
-            user_name = item["name"]
-            time = item["time"]
-            for image in item["images"]:
-                profile = {
-                    "name": user_name,
-                    "time": time,
-                    "images": image
-                }
-                self.images_ready_for_download.append(profile)
-            index += 1
 
         current_thumbnail = current_thumbnail[self.count:]
 
@@ -81,7 +67,6 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.up = None
-        self.images_ready_for_download = []
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         # self.index = 0
@@ -105,11 +90,10 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def ui_download(self):
-        print(self.images_ready_for_download)
-        for value in range(1, 10):
-            photo_status = ("download(self.images_ready_for_download) if self.ui.checkBox_" +
-                            str(value) + ".isChecked() else self.ui.label_" + str(value) + ".setEnabled(False)")
-            exec(photo_status)
+        #for value in range(1, 10):
+        #    photo_status = ("print(" + str(value) + ") if self.ui.checkBox_" +
+        #                    str(value) + ".isChecked()")
+        #    exec(photo_status)
 
 
 if __name__ == "__main__":

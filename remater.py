@@ -28,7 +28,8 @@ def download(order):
             file_name = combined_item["name"] + " " + combined_item['time'] + counter + file_extend_name
             path = os.path.abspath("images")
             full_name = os.path.join(path, file_name)
-            urlretrieve(url, full_name)
+            print(full_name)
+            #urlretrieve(url, full_name)
 
 
 def dumper(xhr, num, thumbnail=False):
