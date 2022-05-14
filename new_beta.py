@@ -15,7 +15,7 @@ class MainWindow(QMainWindow):
         if not self.ui.prev_button.isEnabled():
             self.ui.prev_button.setEnabled(True)
         self.up = self.count + 9
-        thumbnails, data = interface(self.up)
+        thumbnails, self.data = interface(self.up)
         if not os.path.exists("temp"):
             os.mkdir("temp")
         current_thumbnail = []
@@ -66,6 +66,9 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.data = None
+        self.index = None
+        self.num_reset = None
         self.up = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -89,11 +92,28 @@ class MainWindow(QMainWindow):
             exec(photo_status)
 
     @Slot()
-    #def ui_download(self):
-        # for value in range(1, 10):
-        #    photo_status = ("print(" + str(value) + ") if self.ui.checkBox_" +
-        #                    str(value) + ".isChecked()")
-        #    exec(photo_status)
+    def ui_download(self):
+        requires = []
+        count = 0
+        self.num_reset = self.count - 9
+        self.index = None
+        for value in range(1, 10):
+            photo_status = ("self.index = self.num_reset + " + str(value) + " if self.ui.checkBox_" +
+                            str(value) + ".isChecked() else self.ui.label_" + str(value) + ".setEnabled(False)")
+            exec(photo_status)
+            if self.index is not None:
+                requires.append(self.index)
+        print(requires)
+        for item in self.data:
+            count += len(item["images"])
+            #print(count)
+            for photo_index in requires:
+                if count == photo_index:
+                    print(count)
+                    break
+
+                    #print(count - photo_index)
+                    #print(item["images"][count - photo_index - 1])
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'browser.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.3.0
+## Created by: Qt User Interface Compiler version 6.2.4
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -25,7 +25,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(476, 556)
+        MainWindow.resize(476, 545)
         self.action_download = QAction(MainWindow)
         self.action_download.setObjectName(u"action_download")
         self.action_about = QAction(MainWindow)
@@ -77,7 +77,7 @@ class Ui_MainWindow(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.checkBox_1.sizePolicy().hasHeightForWidth())
         self.checkBox_1.setSizePolicy(sizePolicy2)
-        self.checkBox_1.setMaximumSize(QSize(16777215, 10))
+        self.checkBox_1.setMaximumSize(QSize(16777215, 13))
 
         self.horizontalLayout_5.addWidget(self.checkBox_1)
 
@@ -85,7 +85,7 @@ class Ui_MainWindow(object):
         self.checkBox_2.setObjectName(u"checkBox_2")
         sizePolicy2.setHeightForWidth(self.checkBox_2.sizePolicy().hasHeightForWidth())
         self.checkBox_2.setSizePolicy(sizePolicy2)
-        self.checkBox_2.setMaximumSize(QSize(16777215, 10))
+        self.checkBox_2.setMaximumSize(QSize(16777215, 13))
 
         self.horizontalLayout_5.addWidget(self.checkBox_2)
 
@@ -93,7 +93,7 @@ class Ui_MainWindow(object):
         self.checkBox_3.setObjectName(u"checkBox_3")
         sizePolicy2.setHeightForWidth(self.checkBox_3.sizePolicy().hasHeightForWidth())
         self.checkBox_3.setSizePolicy(sizePolicy2)
-        self.checkBox_3.setMaximumSize(QSize(16777215, 10))
+        self.checkBox_3.setMaximumSize(QSize(16777215, 13))
 
         self.horizontalLayout_5.addWidget(self.checkBox_3)
 
@@ -106,7 +106,7 @@ class Ui_MainWindow(object):
         self.checkBox_7.setObjectName(u"checkBox_7")
         sizePolicy2.setHeightForWidth(self.checkBox_7.sizePolicy().hasHeightForWidth())
         self.checkBox_7.setSizePolicy(sizePolicy2)
-        self.checkBox_7.setMaximumSize(QSize(16777215, 10))
+        self.checkBox_7.setMaximumSize(QSize(16777215, 13))
 
         self.horizontalLayout_6.addWidget(self.checkBox_7)
 
@@ -114,7 +114,7 @@ class Ui_MainWindow(object):
         self.checkBox_8.setObjectName(u"checkBox_8")
         sizePolicy2.setHeightForWidth(self.checkBox_8.sizePolicy().hasHeightForWidth())
         self.checkBox_8.setSizePolicy(sizePolicy2)
-        self.checkBox_8.setMaximumSize(QSize(16777215, 10))
+        self.checkBox_8.setMaximumSize(QSize(16777215, 13))
 
         self.horizontalLayout_6.addWidget(self.checkBox_8)
 
@@ -122,7 +122,7 @@ class Ui_MainWindow(object):
         self.checkBox_9.setObjectName(u"checkBox_9")
         sizePolicy2.setHeightForWidth(self.checkBox_9.sizePolicy().hasHeightForWidth())
         self.checkBox_9.setSizePolicy(sizePolicy2)
-        self.checkBox_9.setMaximumSize(QSize(16777215, 10))
+        self.checkBox_9.setMaximumSize(QSize(16777215, 13))
 
         self.horizontalLayout_6.addWidget(self.checkBox_9)
 
@@ -170,7 +170,7 @@ class Ui_MainWindow(object):
         self.checkBox_4.setObjectName(u"checkBox_4")
         sizePolicy2.setHeightForWidth(self.checkBox_4.sizePolicy().hasHeightForWidth())
         self.checkBox_4.setSizePolicy(sizePolicy2)
-        self.checkBox_4.setMaximumSize(QSize(16777215, 10))
+        self.checkBox_4.setMaximumSize(QSize(16777215, 13))
 
         self.horizontalLayout_7.addWidget(self.checkBox_4)
 
@@ -178,7 +178,7 @@ class Ui_MainWindow(object):
         self.checkBox_5.setObjectName(u"checkBox_5")
         sizePolicy2.setHeightForWidth(self.checkBox_5.sizePolicy().hasHeightForWidth())
         self.checkBox_5.setSizePolicy(sizePolicy2)
-        self.checkBox_5.setMaximumSize(QSize(16777215, 10))
+        self.checkBox_5.setMaximumSize(QSize(16777215, 13))
 
         self.horizontalLayout_7.addWidget(self.checkBox_5)
 
@@ -186,7 +186,7 @@ class Ui_MainWindow(object):
         self.checkBox_6.setObjectName(u"checkBox_6")
         sizePolicy2.setHeightForWidth(self.checkBox_6.sizePolicy().hasHeightForWidth())
         self.checkBox_6.setSizePolicy(sizePolicy2)
-        self.checkBox_6.setMaximumSize(QSize(16777215, 10))
+        self.checkBox_6.setMaximumSize(QSize(16777215, 13))
 
         self.horizontalLayout_7.addWidget(self.checkBox_6)
 
@@ -237,10 +237,10 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menuBar = QMenuBar(MainWindow)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 476, 24))
+        self.menuBar.setGeometry(QRect(0, 0, 476, 22))
         self.menu = QMenu(self.menuBar)
         self.menu.setObjectName(u"menu")
-        self.menu.setGeometry(QRect(490, 197, 99, 110))
+        self.menu.setGeometry(QRect(490, 197, 120, 125))
         MainWindow.setMenuBar(self.menuBar)
 
         self.menuBar.addAction(self.menu.menuAction())
