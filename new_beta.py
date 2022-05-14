@@ -2,8 +2,9 @@ from PySide6.QtCore import Slot, Qt
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QApplication, QMainWindow
 from browser import Ui_MainWindow
-from remater import interface, download
+from remater import interface
 from urllib.request import urlretrieve
+from threading import Thread, currentThread
 import sys
 import os
 import shutil
@@ -31,7 +32,10 @@ class MainWindow(QMainWindow):
             index += 1
             file_name = os.path.join(os.path.abspath("temp"), str(self.total_count + 1) + ".webp")
             if not os.path.exists(file_name):
-                urlretrieve(item, file_name)
+                thread =  Thread(target=self.runner, args=(item, file_name))
+                thread.start()
+                thread.join()
+                #urlretrieve(item, file_name)
             # print(file_name)
             label_controller = "self.ui.label_" + str(index) + '.setPixmap(QPixmap(file_name))'
             status = "self.ui.label_" + str(index) + ".setEnabled(False)"
@@ -42,7 +46,6 @@ class MainWindow(QMainWindow):
             exec(checkbox_controller)
             exec(order)
             self.total_count += 1
-            # exec(order)
         self.show()
 
     @Slot()
@@ -112,13 +115,22 @@ class MainWindow(QMainWindow):
                 if count >= photo_index:
                     print(self.total_count)
                     target = images[count - photo_index]
-                    print(target)
-                    print(count - photo_index)
-                    print(item["file_names"][count - photo_index])
-                    urlretrieve(target, item["file_names"][count - photo_index])
+                    # print(target)
+                    # print(count - photo_index)
+                    # print(item["file_names"][count - photo_index])
+                    # urlretrieve(target, item["file_names"][count - photo_index])
+                    thread =  Thread(target=self.runner, args=(target, item["file_names"][count - photo_index]))
+                    thread.start()
+                    #thread.join()
                     requires.pop(0)
                 else:
                     break
+
+
+    def runner(self, url, file_name):
+        urlretrieve(url, file_name)
+        #time.sleep(1)
+        print(currentThread().ident)
 
 
 if __name__ == "__main__":
