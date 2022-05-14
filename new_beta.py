@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
             self.ui.prev_button.setEnabled(False)
         index = 0
         # print(self.count)
-        for item in range(self.count - 8, self.count):
+        for item in range(self.count - 8, self.count + 1):
             index += 1
             # print(item)
             file_name = os.path.join(os.path.abspath("temp"), str(item) + ".webp")
@@ -105,12 +105,19 @@ class MainWindow(QMainWindow):
                 requires.append(self.index)
         print(requires)
         for item in self.data:
-            count += len(item["images"])
+            images = item["images"]
+            count += len(images)
             #print(count)
-            for photo_index in requires:
-                if count == photo_index:
-                    print(count)
-                    break
+            while requires:
+                photo_index = requires[0]
+                if count >= photo_index:
+                    print(self.count)
+                    target = images[count - photo_index]
+                    print(target)
+                    urlretrieve(target, str(self.count - photo_index) + ".jpg")
+                    requires.pop(0)
+                else:
+                   break
 
                     #print(count - photo_index)
                     #print(item["images"][count - photo_index - 1])
@@ -120,5 +127,5 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
     # window.show()
-    app.exec()
+    app.exec_()
     sys.exit(shutil.rmtree("temp"))
