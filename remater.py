@@ -12,12 +12,12 @@ basic_api_url = "https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?to
 history_api_url = "https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_history?"
 
 
-def download(order):
+def download(order, return_name=False):
+    if not os.path.exists("images"):
+        os.mkdir("images")
     for combined_item in order:
         count = 0
-        if not os.path.exists("images"):
-            os.mkdir("images")
-
+        file_names = []
         for url in combined_item["images"]:
             count += 1
             if len(combined_item["images"]) == 1:
@@ -26,10 +26,15 @@ def download(order):
                 counter = " " + str(count)
             file_extend_name = url[url.rfind("."):]
             file_name = combined_item["name"] + " " + combined_item['time'] + counter + file_extend_name
-            path = os.path.abspath("images")
-            full_name = os.path.join(path, file_name)
-            print(full_name)
-            #urlretrieve(url, full_name)
+
+            if return_name:
+                file_names.append(file_name)
+            else:
+                path = os.path.abspath("images")
+                full_name = os.path.join(path, file_name)
+                # print(full_name)
+                urlretrieve(url, full_name)
+            combined_item["file_names"] = file_names
 
 
 def dumper(xhr, num, thumbnail=False):
@@ -96,6 +101,7 @@ def interface(number):
     web = requests.get(basic_api_url)
     xhr = web.json()
     dumper(xhr, number, thumbnail=True)
+    download(results, return_name=True)
     return [thumbnails, results]
 
 

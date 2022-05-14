@@ -14,7 +14,7 @@ class MainWindow(QMainWindow):
     def load_image(self):
         if not self.ui.prev_button.isEnabled():
             self.ui.prev_button.setEnabled(True)
-        self.up = self.count + 9
+        self.up = self.total_count + 9
         thumbnails, self.data = interface(self.up)
         if not os.path.exists("temp"):
             os.mkdir("temp")
@@ -23,13 +23,13 @@ class MainWindow(QMainWindow):
             for thumbnail in member["images"]:
                 current_thumbnail.append(thumbnail)
 
-        current_thumbnail = current_thumbnail[self.count:]
+        current_thumbnail = current_thumbnail[self.total_count:]
 
-        # print(self.count, self.up, current_thumbnail)
+        # print(self.total_count, self.up, current_thumbnail)
         index = 0
         for item in current_thumbnail:
             index += 1
-            file_name = os.path.join(os.path.abspath("temp"), str(self.count + 1) + ".webp")
+            file_name = os.path.join(os.path.abspath("temp"), str(self.total_count + 1) + ".webp")
             if not os.path.exists(file_name):
                 urlretrieve(item, file_name)
             # print(file_name)
@@ -41,18 +41,18 @@ class MainWindow(QMainWindow):
             exec(status)
             exec(checkbox_controller)
             exec(order)
-            self.count += 1
+            self.total_count += 1
             # exec(order)
         self.show()
 
     @Slot()
     def prev_(self):
-        self.count -= 9
-        if self.count - 9 == 0:
+        self.total_count -= 9
+        if self.total_count - 9 == 0:
             self.ui.prev_button.setEnabled(False)
         index = 0
-        # print(self.count)
-        for item in range(self.count - 8, self.count + 1):
+        # print(self.total_count)
+        for item in range(self.total_count - 8, self.total_count + 1):
             index += 1
             # print(item)
             file_name = os.path.join(os.path.abspath("temp"), str(item) + ".webp")
@@ -68,12 +68,12 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.data = None
         self.index = None
-        self.num_reset = None
+        self.low = None
         self.up = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         # self.index = 0
-        self.count = 0
+        self.total_count = 0
         self.load_image()
         self.ui.next_button.clicked.connect(self.load_image)
         self.ui.prev_button.clicked.connect(self.prev_)
@@ -95,10 +95,10 @@ class MainWindow(QMainWindow):
     def ui_download(self):
         requires = []
         count = 0
-        self.num_reset = self.count - 9
+        self.low = self.total_count - 9
         self.index = None
         for value in range(1, 10):
-            photo_status = ("self.index = self.num_reset + " + str(value) + " if self.ui.checkBox_" +
+            photo_status = ("self.index = self.low + " + str(value) + " if self.ui.checkBox_" +
                             str(value) + ".isChecked() else self.ui.label_" + str(value) + ".setEnabled(False)")
             exec(photo_status)
             if self.index is not None:
@@ -107,25 +107,23 @@ class MainWindow(QMainWindow):
         for item in self.data:
             images = item["images"]
             count += len(images)
-            #print(count)
             while requires:
                 photo_index = requires[0]
                 if count >= photo_index:
-                    print(self.count)
+                    print(self.total_count)
                     target = images[count - photo_index]
                     print(target)
-                    urlretrieve(target, str(self.count - photo_index) + ".jpg")
+                    print(count - photo_index)
+                    print(item["file_names"][count - photo_index])
+                    urlretrieve(target, item["file_names"][count - photo_index])
                     requires.pop(0)
                 else:
-                   break
-
-                    #print(count - photo_index)
-                    #print(item["images"][count - photo_index - 1])
+                    break
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
     # window.show()
-    app.exec_()
+    app.exec()
     sys.exit(shutil.rmtree("temp"))
