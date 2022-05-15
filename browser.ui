@@ -388,19 +388,20 @@
    <widget class="QMenu" name="menu">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>197</y>
-      <width>120</width>
-      <height>125</height>
+      <x>516</x>
+      <y>335</y>
+      <width>140</width>
+      <height>134</height>
      </rect>
     </property>
     <property name="title">
      <string>文件</string>
     </property>
     <addaction name="action_download"/>
-    <addaction name="actionclose"/>
+    <addaction name="action_change_folder"/>
     <addaction name="separator"/>
     <addaction name="action_about"/>
+    <addaction name="action_exit_app"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -412,14 +413,28 @@
     <string>Ctrl+S</string>
    </property>
   </action>
+  <action name="action_change_folder">
+   <property name="text">
+    <string>更改下载位置……</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
   <action name="action_about">
    <property name="text">
     <string>关于</string>
    </property>
   </action>
-  <action name="actionclose">
+  <action name="action_exit_app">
    <property name="text">
-    <string>关闭</string>
+    <string>退出……</string>
+   </property>
+   <property name="toolTip">
+    <string>退出本应用</string>
+   </property>
+   <property name="shortcut">
+    <string/>
    </property>
   </action>
  </widget>

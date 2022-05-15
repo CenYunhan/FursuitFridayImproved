@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'browser.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.2.4
+## Created by: Qt User Interface Compiler version 6.3.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -28,10 +28,12 @@ class Ui_MainWindow(object):
         MainWindow.resize(476, 545)
         self.action_download = QAction(MainWindow)
         self.action_download.setObjectName(u"action_download")
+        self.action_change_folder = QAction(MainWindow)
+        self.action_change_folder.setObjectName(u"action_change_folder")
         self.action_about = QAction(MainWindow)
         self.action_about.setObjectName(u"action_about")
-        self.actionclose = QAction(MainWindow)
-        self.actionclose.setObjectName(u"actionclose")
+        self.action_exit_app = QAction(MainWindow)
+        self.action_exit_app.setObjectName(u"action_exit_app")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -240,14 +242,15 @@ class Ui_MainWindow(object):
         self.menuBar.setGeometry(QRect(0, 0, 476, 22))
         self.menu = QMenu(self.menuBar)
         self.menu.setObjectName(u"menu")
-        self.menu.setGeometry(QRect(490, 197, 120, 125))
+        self.menu.setGeometry(QRect(516, 335, 140, 134))
         MainWindow.setMenuBar(self.menuBar)
 
         self.menuBar.addAction(self.menu.menuAction())
         self.menu.addAction(self.action_download)
-        self.menu.addAction(self.actionclose)
+        self.menu.addAction(self.action_change_folder)
         self.menu.addSeparator()
         self.menu.addAction(self.action_about)
+        self.menu.addAction(self.action_exit_app)
 
         self.retranslateUi(MainWindow)
 
@@ -260,8 +263,18 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(shortcut)
         self.action_download.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+S", None))
 #endif // QT_CONFIG(shortcut)
+        self.action_change_folder.setText(QCoreApplication.translate("MainWindow", u"\u66f4\u6539\u4e0b\u8f7d\u4f4d\u7f6e\u2026\u2026", None))
+#if QT_CONFIG(shortcut)
+        self.action_change_folder.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+O", None))
+#endif // QT_CONFIG(shortcut)
         self.action_about.setText(QCoreApplication.translate("MainWindow", u"\u5173\u4e8e", None))
-        self.actionclose.setText(QCoreApplication.translate("MainWindow", u"\u5173\u95ed", None))
+        self.action_exit_app.setText(QCoreApplication.translate("MainWindow", u"\u9000\u51fa\u2026\u2026", None))
+#if QT_CONFIG(tooltip)
+        self.action_exit_app.setToolTip(QCoreApplication.translate("MainWindow", u"\u9000\u51fa\u672c\u5e94\u7528", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(shortcut)
+        self.action_exit_app.setShortcut("")
+#endif // QT_CONFIG(shortcut)
         self.label_1.setText("")
         self.label_2.setText("")
         self.label_3.setText("")

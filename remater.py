@@ -13,8 +13,6 @@ history_api_url = "https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_hist
 
 
 def download(order, return_name=False):
-    if not os.path.exists("images"):
-        os.mkdir("images")
     for combined_item in order:
         count = 0
         file_names = []
@@ -30,6 +28,8 @@ def download(order, return_name=False):
             if return_name:
                 file_names.append(file_name)
             else:
+                if not os.path.exists("images"):
+                    os.mkdir("images")
                 path = os.path.abspath("images")
                 full_name = os.path.join(path, file_name)
                 # print(full_name)
