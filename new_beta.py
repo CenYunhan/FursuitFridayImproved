@@ -1,7 +1,8 @@
 from PySide6.QtCore import Slot, Qt
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PySide6.QtWidgets import QApplication, QMainWindow, QDialog, QFileDialog
 from browser import Ui_MainWindow
+from dialog_about import Ui_Dialog
 from remater import interface
 from urllib.request import urlretrieve
 from threading import Thread
@@ -87,9 +88,10 @@ class MainWindow(QMainWindow):
             command = "self.ui.checkBox_" + str(value) + ".stateChanged.connect(self.checkbox)"
             exec(command)
         self.ui.prev_button.setEnabled(False)
+        self.ui.action_about.triggered.connect(self.raise_about)
+        self.ui.action_change_folder.triggered.connect(self.open_file_dialog)
         self.ui.action_download.triggered.connect(self.ui_download)
         self.ui.action_exit_app.triggered.connect(self.close)
-        self.ui.action_change_folder.triggered.connect(self.open_file_dialog)
 
     @Slot()
     def checkbox(self):
@@ -119,10 +121,6 @@ class MainWindow(QMainWindow):
                 if count >= photo_index:
                     # print(self.total_count)
                     target = images[count - photo_index]
-                    # print(target)
-                    # print(count - photo_index)
-                    # print(item["file_names"][count - photo_index])
-                    # urlretrieve(target, item["file_names"][count - photo_index])
                     thread = (Thread(target=urlretrieve,
                                      args=(target, os.path.join(self.save_path,
                                                                 item["file_names"][count - photo_index]))))
@@ -135,6 +133,19 @@ class MainWindow(QMainWindow):
     @Slot()
     def open_file_dialog(self):
         self.save_path = QFileDialog.getExistingDirectory(self, "", os.getcwd())
+
+    @Slot()
+    def raise_about(self):
+        dialog = About()
+        dialog.show()
+        dialog.exec()
+
+
+class About(QDialog):
+    def __init__(self):
+        super(About, self).__init__()
+        self.ui = Ui_Dialog()
+        self.ui.setupUi(self)
 
 
 if __name__ == "__main__":
