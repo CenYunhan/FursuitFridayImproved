@@ -1,11 +1,11 @@
 from PySide6.QtCore import Slot, Qt
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QApplication, QMainWindow, QDialog, QFileDialog
+from PySide6.QtWidgets import QApplication, QMainWindow, QDialog, QFileDialog, QMessageBox
 from browser import Ui_MainWindow
 from dialog_about import Ui_Dialog
 from remater import interface
 from urllib.request import urlretrieve
-from threading import Thread
+import urllib.error
 import sys
 import os
 import shutil
@@ -17,7 +17,11 @@ class MainWindow(QMainWindow):
         if not self.ui.prev_button.isEnabled():
             self.ui.prev_button.setEnabled(True)
         self.up = self.total_count + 9
-        thumbnails, self.data = interface(self.up)
+        try:
+            thumbnails, self.data, self.names_without_ext, self.names = interface(self.up)
+        except ConnectionError:
+            self.raise_message("网络未连接")
+            sys.exit(app.exit())
         if not os.path.exists("temp"):
             os.mkdir("temp")
         current_thumbnail = []
@@ -33,19 +37,19 @@ class MainWindow(QMainWindow):
             index += 1
             file_name = os.path.join(os.path.abspath("temp"), str(self.total_count + 1) + ".webp")
             if not os.path.exists(file_name):
-                thread = Thread(target=urlretrieve, args=(item, file_name))
-                thread.start()
-                thread.join()
-                # urlretrieve(item, file_name)
+                urlretrieve(item, file_name)
             # print(file_name)
             label_controller = "self.ui.label_" + str(index) + '.setPixmap(QPixmap(file_name))'
             status = "self.ui.label_" + str(index) + ".setEnabled(False)"
             checkbox_controller = "self.ui.checkBox_" + str(index) + ".setChecked(False)"
             order = "self.ui.label_" + str(index) + ".setAlignment(Qt.AlignCenter)"
+            change_name = "self.ui.checkBox_" + str(index) + \
+                          ".setText('" + self.names_without_ext[self.total_count] + "')"
             exec(label_controller)
             exec(status)
             exec(checkbox_controller)
             exec(order)
+            exec(change_name)
             self.total_count += 1
         self.show()
 
@@ -70,6 +74,8 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.names_without_ext = None
+        self.names = None
         self.data = None
         self.index = None
         self.low = None
@@ -77,6 +83,7 @@ class MainWindow(QMainWindow):
         self.save_path = os.getcwd()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.messagebox = QMessageBox()
         self.setWindowTitle("毛图")
         # self.index = 0
         self.total_count = 0
@@ -121,10 +128,11 @@ class MainWindow(QMainWindow):
                 if count >= photo_index:
                     # print(self.total_count)
                     target = images[count - photo_index]
-                    thread = (Thread(target=urlretrieve,
-                                     args=(target, os.path.join(self.save_path,
-                                                                item["file_names"][count - photo_index]))))
-                    thread.start()
+                    try:
+                        urlretrieve(target, os.path.join(self.save_path,self.names[photo_index - 1]))
+                        self.raise_message("下载中……")
+                    except urllib.error.URLError:
+                        self.raise_message("网络未连接")
                     # thread.join()
                     requires.pop(0)
                 else:
@@ -139,6 +147,10 @@ class MainWindow(QMainWindow):
         dialog = About()
         dialog.show()
         dialog.exec()
+
+    @Slot()
+    def raise_message(self, message):
+        self.messagebox.information(self, "下载器", message)
 
 
 class About(QDialog):
