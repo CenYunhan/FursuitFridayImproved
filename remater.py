@@ -6,16 +6,20 @@ from urllib.request import urlretrieve
 
 results = []
 thumbnails = []
+names = []
+names_without_ext = []
 image_count = 0
 topic_id = "8807683"
-basic_api_url = "https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_id=" + topic_id
+basic_api_url = "https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_new?topic_id="
 history_api_url = "https://api.vc.bilibili.com/topic_svr/v1/topic_svr/topic_history?"
 
 
-def download(order, return_name=False):
+def download(order, return_name=False, no_ext_name=False):
+    global names, names_without_ext
+    names = []
+    names_without_ext = []
     for combined_item in order:
         count = 0
-        file_names = []
         for url in combined_item["images"]:
             count += 1
             if len(combined_item["images"]) == 1:
@@ -23,10 +27,12 @@ def download(order, return_name=False):
             else:
                 counter = " " + str(count)
             file_extend_name = url[url.rfind("."):]
-            file_name = combined_item["name"] + " " + combined_item['time'] + counter + file_extend_name
 
-            if return_name:
-                file_names.append(file_name)
+            if no_ext_name and return_name:
+                file_name = combined_item["name"] + " " + combined_item['time'] + counter + file_extend_name
+                file_name_without_ext = combined_item["name"] + " " + combined_item['time'] + counter
+                names.append(file_name)
+                names_without_ext.append(file_name_without_ext)
             else:
                 if not os.path.exists("images"):
                     os.mkdir("images")
@@ -34,7 +40,6 @@ def download(order, return_name=False):
                 full_name = os.path.join(path, file_name)
                 # print(full_name)
                 urlretrieve(url, full_name)
-            combined_item["file_names"] = file_names
 
 
 def dumper(xhr, num, thumbnail=False):
@@ -83,7 +88,7 @@ def dumper(xhr, num, thumbnail=False):
 
 
 def main():
-    web = requests.get(basic_api_url)
+    web = requests.get(basic_api_url + topic_id)
     xhr = web.json()
     try:
         number = int(input("数量？ "))
@@ -93,16 +98,21 @@ def main():
     dumper(xhr, number)
 
 
-def interface(number):
-    global results, image_count, thumbnails
+def interface(new_topic_id, number):
+    global results, image_count, thumbnails, topic_id
+    if new_topic_id:
+        topic_id = new_topic_id
     results = []
     thumbnails = []
     image_count = 0
-    web = requests.get(basic_api_url)
-    xhr = web.json()
-    dumper(xhr, number, thumbnail=True)
-    download(results, return_name=True)
-    return [thumbnails, results]
+    try:
+        web = requests.get(basic_api_url + topic_id)
+        xhr = web.json()
+        dumper(xhr, number, thumbnail=True)
+        download(results, return_name=True, no_ext_name=True)
+        return [thumbnails, results, names_without_ext, names]
+    except (requests.exceptions.Timeout, requests.exceptions.ConnectionError):
+        raise ConnectionError
 
 
 if __name__ == "__main__":
