@@ -13,16 +13,23 @@ import shutil
 
 
 class MainWindow(QMainWindow):
-    @Slot()
+    @Slot()  # 加载图像
     def load_image(self):
+        # 预先声明topic_id避免unbounded error
         topic_id = ""
+        # 判断是否存在新的url 是否请求切换地址
         if global_URL and self.changeURL:
+            # 检查是否为bilibili动态链接
             if "t.bilibili.com" in global_URL:
+                # 提取topic_id
                 topic_id = global_URL[global_URL.find("topic") + len("topic") + 1: -1]
+                # 刷新缓存的变量
                 shutil.rmtree("temp")
                 self.names_without_ext = self.names = self.data = None
                 self.total_count = 0
+                # 操作完毕后将请求状态切换为否
                 self.changeURL = False
+        # 在用户点击下一页后启用上一页按钮
         if not self.ui.prev_button.isEnabled():
             self.ui.prev_button.setEnabled(True)
         self.up = self.total_count + 9
@@ -88,7 +95,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.names_without_ext = self.names = self.data = self.index = self.up = self.low = self.changeURL = None
+        self.names_without_ext = self.names = self.data = self.up = self.low = self.index = self.changeURL = None
         self.save_path = os.getcwd()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -98,6 +105,7 @@ class MainWindow(QMainWindow):
         self.load_image()
         self.ui.next_button.clicked.connect(self.load_image)
         self.ui.prev_button.clicked.connect(self.prev)
+        # 将所有的复选框与信号绑定
         for value in range(1, 10):
             command = "self.ui.checkBox_" + str(value) + ".stateChanged.connect(self.checkbox)"
             exec(command)
@@ -108,6 +116,12 @@ class MainWindow(QMainWindow):
         self.ui.action_exit_app.triggered.connect(self.close)
         self.ui.action_URL.triggered.connect(self.raise_url_change_dialog)
         self.ui.action_select_all.triggered.connect(self.select_all_images)
+
+        """
+        names保存了后端整理后的文件名 用于下载器保存;names_without_ext和names相同 但不带扩展名 用于标题的展示
+        self.data保存了整理后图片的url等信息
+        self.total_count,self.up对应当前的图片数量,下一次应该加载的数量
+        """
 
     @Slot()
     def checkbox(self):
@@ -121,7 +135,6 @@ class MainWindow(QMainWindow):
         requires = []
         count = 0
         self.low = self.total_count - 9
-        self.index = None
         for value in range(1, 10):
             photo_status = ("self.index = self.low + " + str(value) + " if self.ui.checkBox_" +
                             str(value) + ".isChecked() else self.ui.label_" + str(value) + ".setEnabled(False)")
@@ -136,7 +149,10 @@ class MainWindow(QMainWindow):
                 photo_index = requires[0]
                 if count >= photo_index:
                     # print(self.total_count)
-                    target = images[count - photo_index]
+                    if count <= 9:
+                        target = images[photo_index - 1]
+                    else:
+                        target = images[count - photo_index]
                     try:
                         urlretrieve(target, os.path.join(self.save_path, self.names[photo_index - 1]))
                     except urllib.error.URLError:
@@ -174,6 +190,7 @@ class MainWindow(QMainWindow):
         global global_URL
         dialog = URLDialog()
         dialog.setWindowTitle("更改URL")
+        # 绑定信号 获取输入的内容并请求切换
         dialog.ui.buttonBox.accepted.connect(dialog.get_text)
         dialog.ui.buttonBox.accepted.connect(self.load_image)
         self.changeURL = True
