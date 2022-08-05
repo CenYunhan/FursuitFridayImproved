@@ -55,14 +55,14 @@ def dumper(xhr, num, thumbnail=False):
         thumbnail_temp = []
         try:
             for picture in card["item"]["pictures"]:
-                if image_count >= num:
-                    break
+                image_count += 1
                 img_src = picture["img_src"]
                 images_temp.append(img_src)
                 if thumbnail:
                     img_thumbnail = img_src + "@104w_104h.webp"
                     thumbnail_temp.append(img_thumbnail)
-                image_count += 1
+                if image_count >= num:
+                    break
             user_name = card['user']['name']
             timestamp = card['item']['upload_time']
             upload_time = time.strftime("%Y-%m-%d %H.%M.%S", time.localtime(timestamp))
@@ -100,14 +100,14 @@ def search_service(xhr, num, search_content):
         try:
             user_name = card['user']['name']
             if search_content == user_name:
-                if image_count >= num:
-                    break
                 for picture in card["item"]["pictures"]:
                     img_src = picture["img_src"]
                     images_temp.append(img_src)
                     img_thumbnail = img_src + "@104w_104h.webp"
                     thumbnail_temp.append(img_thumbnail)
                     image_count += 1
+                    if image_count >= num:
+                        break
                 timestamp = card['item']['upload_time']
                 upload_time = time.strftime("%Y-%m-%d %H.%M.%S", time.localtime(timestamp))
                 profile = {

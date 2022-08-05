@@ -3,7 +3,7 @@ from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QApplication, QMainWindow, QDialog, QFileDialog, QMessageBox
 from framework import Ui_MainWindow
 from dialog_about import Ui_Dialog
-from dialog_URL import Ui_Dialog as Ui_URL
+from dialog_user_input import Ui_Dialog as Ui_URL
 from core_utilities import interface
 from urllib.request import urlretrieve
 import urllib.error
@@ -14,7 +14,7 @@ import shutil
 
 class MainWindow(QMainWindow):
     @Slot()  # 加载图像
-    def load_image(self,):
+    def load_image(self):
         # 预先声明topic_id避免unbounded error
         topic_id = ""
         # 判断是否存在新的url 是否请求切换地址
@@ -33,6 +33,7 @@ class MainWindow(QMainWindow):
             shutil.rmtree("temp")
             self.names_without_ext = self.names = self.data = None
             self.total_count = 0
+            self.search_status = False
         # 在用户点击下一页后启用上一页按钮
         if not self.ui.prev_button.isEnabled():
             self.ui.prev_button.setEnabled(True)
