@@ -27,9 +27,9 @@ def download(order, return_name=False, no_ext_name=False):
             else:
                 counter = " " + str(count)
             file_extend_name = url[url.rfind("."):]
+            file_name = combined_item["name"] + " " + combined_item['time'] + counter + file_extend_name
 
             if no_ext_name and return_name:
-                file_name = combined_item["name"] + " " + combined_item['time'] + counter + file_extend_name
                 file_name_without_ext = combined_item["name"] + " " + combined_item['time'] + counter
                 names.append(file_name)
                 names_without_ext.append(file_name_without_ext)
