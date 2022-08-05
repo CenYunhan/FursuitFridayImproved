@@ -14,7 +14,7 @@ import shutil
 
 class MainWindow(QMainWindow):
     @Slot()  # 加载图像
-    def load_image(self):
+    def load_image(self,):
         # 预先声明topic_id避免unbounded error
         topic_id = ""
         # 判断是否存在新的url 是否请求切换地址
@@ -29,15 +29,26 @@ class MainWindow(QMainWindow):
                 self.total_count = 0
                 # 操作完毕后将请求状态切换为否
                 self.changeURL = False
+        if keyword and self.search_status:
+            shutil.rmtree("temp")
+            self.names_without_ext = self.names = self.data = None
+            self.total_count = 0
         # 在用户点击下一页后启用上一页按钮
         if not self.ui.prev_button.isEnabled():
             self.ui.prev_button.setEnabled(True)
         self.up = self.total_count + 9
-        try:
-            thumbnails, self.data, self.names_without_ext, self.names = interface(topic_id, self.up)
-        except ConnectionError:
-            self.raise_message("网络未连接")
-            sys.exit(app.exit())
+        if not keyword:
+            try:
+                thumbnails, self.data, self.names_without_ext, self.names = interface(self.up, topic_id)
+            except ConnectionError:
+                self.raise_message("网络未连接")
+                sys.exit(app.exit())
+        else:
+            try:
+                thumbnails, self.data, self.names_without_ext, self.names = interface(self.up, search_content=keyword)
+            except ConnectionError:
+                self.raise_message("网络未连接")
+                sys.exit(app.exit())
         if not os.path.exists("temp"):
             os.mkdir("temp")
         current_thumbnail = []
@@ -95,6 +106,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.search_status = None
         self.names_without_ext = self.names = self.data = self.up = self.low = self.index = self.changeURL = None
         self.save_path = os.getcwd()
         self.ui = Ui_MainWindow()
@@ -116,6 +128,7 @@ class MainWindow(QMainWindow):
         self.ui.action_exit_app.triggered.connect(self.close)
         self.ui.action_URL.triggered.connect(self.raise_url_change_dialog)
         self.ui.action_select_all.triggered.connect(self.select_all_images)
+        self.ui.action_Search.triggered.connect(self.search_service_helper)
 
         """
         names保存了后端整理后的文件名 用于下载器保存;names_without_ext和names相同 但不带扩展名 用于标题的展示
@@ -175,6 +188,17 @@ class MainWindow(QMainWindow):
                 exec(command)
 
     @Slot()
+    def search_service_helper(self):
+        self.search_status = True
+        dialog = URLDialog()
+        dialog.setWindowTitle("搜索")
+        dialog.ui.label.setText("请输入要搜索的up主")
+        dialog.ui.buttonBox.accepted.connect(dialog.get_keyword)
+        dialog.ui.buttonBox.accepted.connect(self.load_image)
+        dialog.exec()
+        dialog.show()
+
+    @Slot()
     def raise_about(self):
         dialog = About()
         dialog.setWindowTitle("关于")
@@ -191,7 +215,7 @@ class MainWindow(QMainWindow):
         dialog = URLDialog()
         dialog.setWindowTitle("更改URL")
         # 绑定信号 获取输入的内容并请求切换
-        dialog.ui.buttonBox.accepted.connect(dialog.get_text)
+        dialog.ui.buttonBox.accepted.connect(dialog.get_url)
         dialog.ui.buttonBox.accepted.connect(self.load_image)
         self.changeURL = True
         dialog.show()
@@ -213,13 +237,19 @@ class URLDialog(QDialog):
         self.ui.label.setText("请输入要载入的URL")
 
     @Slot()
-    def get_text(self):
+    def get_url(self):
         global global_URL
         global_URL = self.ui.lineEdit.text()
+
+    @Slot()
+    def get_keyword(self):
+        global keyword
+        keyword = self.ui.lineEdit.text()
 
 
 if __name__ == "__main__":
     global_URL = ""
+    keyword = ""
     app = QApplication(sys.argv)
     window = MainWindow()
     app.exec()

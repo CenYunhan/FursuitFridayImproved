@@ -365,17 +365,18 @@
       <x>158</x>
       <y>126</y>
       <width>151</width>
-      <height>183</height>
+      <height>204</height>
      </rect>
     </property>
     <property name="title">
      <string>文件</string>
     </property>
+    <addaction name="action_select_all"/>
+    <addaction name="action_Search"/>
     <addaction name="action_download"/>
     <addaction name="action_change_folder"/>
     <addaction name="action_URL"/>
     <addaction name="separator"/>
-    <addaction name="action_select_all"/>
     <addaction name="action_about"/>
     <addaction name="action_exit_app"/>
    </widget>
@@ -424,6 +425,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="action_Search">
+   <property name="text">
+    <string>搜索</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
    </property>
   </action>
  </widget>

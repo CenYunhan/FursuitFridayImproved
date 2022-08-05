@@ -51,9 +51,9 @@ def dumper(xhr, num, thumbnail=False):
         if image_count >= num:
             break
         card = json.loads(source["card"])
+        images_temp = []
+        thumbnail_temp = []
         try:
-            images_temp = []
-            thumbnail_temp = []
             for picture in card["item"]["pictures"]:
                 if image_count >= num:
                     break
@@ -87,6 +87,47 @@ def dumper(xhr, num, thumbnail=False):
             dumper(history, num)
 
 
+def search_service(xhr, num, search_content):
+    global results, thumbnails, image_count
+
+    xhr_data = xhr["data"]
+    offset = xhr_data['offset']
+
+    for source in xhr_data['cards']:
+        card = json.loads(source["card"])
+        images_temp = []
+        thumbnail_temp = []
+        try:
+            user_name = card['user']['name']
+            if search_content == user_name:
+                if image_count >= num:
+                    break
+                for picture in card["item"]["pictures"]:
+                    img_src = picture["img_src"]
+                    images_temp.append(img_src)
+                    img_thumbnail = img_src + "@104w_104h.webp"
+                    thumbnail_temp.append(img_thumbnail)
+                    image_count += 1
+                timestamp = card['item']['upload_time']
+                upload_time = time.strftime("%Y-%m-%d %H.%M.%S", time.localtime(timestamp))
+                profile = {
+                    'name': user_name,
+                    'images': images_temp,
+                    'time': upload_time
+                }
+                thumbnail_profile = {
+                    'images': thumbnail_temp
+                }
+                results.append(profile)
+                thumbnails.append(thumbnail_profile)
+        except KeyError:
+            pass
+    if image_count < num:
+        history_url = history_api_url + "topic_id=" + topic_id + "&offset_dynamic_id=" + offset
+        history = requests.get(history_url).json()
+        search_service(history, num, search_content)
+
+
 def main():
     web = requests.get(basic_api_url + topic_id)
     xhr = web.json()
@@ -98,7 +139,7 @@ def main():
     dumper(xhr, number)
 
 
-def interface(new_topic_id, number):
+def interface(number, new_topic_id="", search_content=""):
     global results, image_count, thumbnails, topic_id
     if new_topic_id:
         topic_id = new_topic_id
@@ -108,7 +149,10 @@ def interface(new_topic_id, number):
     try:
         web = requests.get(basic_api_url + topic_id)
         xhr = web.json()
-        dumper(xhr, number, thumbnail=True)
+        if search_content:
+            search_service(xhr, number, search_content)
+        else:
+            dumper(xhr, number, thumbnail=True)
         download(results, return_name=True, no_ext_name=True)
         return [thumbnails, results, names_without_ext, names]
     except (requests.exceptions.Timeout, requests.exceptions.ConnectionError):
