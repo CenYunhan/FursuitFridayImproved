@@ -15,12 +15,15 @@ import shutil
 class MainWindow(QMainWindow):
     @Slot()  # 加载图像
     def load_image(self):
+        global global_URL
         # 预先声明topic_id避免unbounded error
         topic_id = ""
         # 判断是否存在新的url 是否请求切换地址
         if global_URL and self.changeURL:
             # 检查是否为bilibili动态链接
             if "t.bilibili.com" in global_URL:
+                if not global_URL.endswith("/"):
+                    global_URL += "/"
                 # 提取topic_id
                 topic_id = global_URL[global_URL.find("topic") + len("topic") + 1: -1]
                 # 刷新缓存的变量
@@ -113,7 +116,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.messagebox = QMessageBox()
-        self.setWindowTitle("毛图")
+        self.setWindowTitle("FursuitFriday Improved")
         self.total_count = 0
         self.load_image()
         self.ui.next_button.clicked.connect(self.load_image)
@@ -156,17 +159,17 @@ class MainWindow(QMainWindow):
             if self.index is not None:
                 requires.append(self.index)
         # print(requires)
+        if requires:
+            self.raise_message("已经开始下载,请自行检查文件夹\n" + self.save_path)
         for item in self.data:
             images = item["images"]
+            temporal_count = count
             count += len(images)
             while requires:
                 photo_index = requires[0]
                 if count >= photo_index:
                     # print(self.total_count)
-                    if count <= 9:
-                        target = images[photo_index - 1]
-                    else:
-                        target = images[count - photo_index]
+                    target = images[photo_index - temporal_count - 1]
                     try:
                         urlretrieve(target, os.path.join(self.save_path, self.names[photo_index - 1]))
                     except urllib.error.URLError:
@@ -208,7 +211,7 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def raise_message(self, message):
-        self.messagebox.information(self, "下载器", message)
+        self.messagebox.information(self, "", message)
 
     @Slot()
     def raise_url_change_dialog(self):
