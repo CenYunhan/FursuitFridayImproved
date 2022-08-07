@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'browser.ui'
+## Form generated from reading UI file 'framework.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.3.0
 ##
@@ -33,6 +33,12 @@ class Ui_MainWindow(object):
         self.action_about.setObjectName(u"action_about")
         self.action_exit_app = QAction(MainWindow)
         self.action_exit_app.setObjectName(u"action_exit_app")
+        self.action_URL = QAction(MainWindow)
+        self.action_URL.setObjectName(u"action_URL")
+        self.action_select_all = QAction(MainWindow)
+        self.action_select_all.setObjectName(u"action_select_all")
+        self.action_Search = QAction(MainWindow)
+        self.action_Search.setObjectName(u"action_Search")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -229,15 +235,18 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menuBar = QMenuBar(MainWindow)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 476, 24))
+        self.menuBar.setGeometry(QRect(0, 0, 476, 22))
         self.menu = QMenu(self.menuBar)
         self.menu.setObjectName(u"menu")
-        self.menu.setGeometry(QRect(516, 335, 133, 128))
+        self.menu.setGeometry(QRect(158, 126, 151, 204))
         MainWindow.setMenuBar(self.menuBar)
 
         self.menuBar.addAction(self.menu.menuAction())
+        self.menu.addAction(self.action_select_all)
+        self.menu.addAction(self.action_Search)
         self.menu.addAction(self.action_download)
         self.menu.addAction(self.action_change_folder)
+        self.menu.addAction(self.action_URL)
         self.menu.addSeparator()
         self.menu.addAction(self.action_about)
         self.menu.addAction(self.action_exit_app)
@@ -264,6 +273,15 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(shortcut)
         self.action_exit_app.setShortcut("")
+#endif // QT_CONFIG(shortcut)
+        self.action_URL.setText(QCoreApplication.translate("MainWindow", u"\u66f4\u6539URL\u2026\u2026", None))
+        self.action_select_all.setText(QCoreApplication.translate("MainWindow", u"\u5168\u9009", None))
+#if QT_CONFIG(shortcut)
+        self.action_select_all.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+A", None))
+#endif // QT_CONFIG(shortcut)
+        self.action_Search.setText(QCoreApplication.translate("MainWindow", u"\u641c\u7d22", None))
+#if QT_CONFIG(shortcut)
+        self.action_Search.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+F", None))
 #endif // QT_CONFIG(shortcut)
         self.checkBox_1.setText(QCoreApplication.translate("MainWindow", u"CheckBox", None))
         self.checkBox_2.setText(QCoreApplication.translate("MainWindow", u"CheckBox", None))

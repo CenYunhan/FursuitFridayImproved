@@ -353,7 +353,7 @@
      <x>0</x>
      <y>0</y>
      <width>476</width>
-     <height>24</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="accessibleName">
@@ -362,17 +362,20 @@
    <widget class="QMenu" name="menu">
     <property name="geometry">
      <rect>
-      <x>516</x>
-      <y>335</y>
-      <width>133</width>
-      <height>128</height>
+      <x>158</x>
+      <y>126</y>
+      <width>151</width>
+      <height>204</height>
      </rect>
     </property>
     <property name="title">
      <string>文件</string>
     </property>
+    <addaction name="action_select_all"/>
+    <addaction name="action_Search"/>
     <addaction name="action_download"/>
     <addaction name="action_change_folder"/>
+    <addaction name="action_URL"/>
     <addaction name="separator"/>
     <addaction name="action_about"/>
     <addaction name="action_exit_app"/>
@@ -409,6 +412,27 @@
    </property>
    <property name="shortcut">
     <string/>
+   </property>
+  </action>
+  <action name="action_URL">
+   <property name="text">
+    <string>更改URL……</string>
+   </property>
+  </action>
+  <action name="action_select_all">
+   <property name="text">
+    <string>全选</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="action_Search">
+   <property name="text">
+    <string>搜索</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
    </property>
   </action>
  </widget>

@@ -2,7 +2,7 @@
 import os
 from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
-from ui import Ui_MainWindow
+from v1.ui import Ui_MainWindow
 import sys
 import traceback
 from urllib.request import urlretrieve
