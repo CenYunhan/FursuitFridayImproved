@@ -15,7 +15,7 @@ import shutil
 class MainWindow(QMainWindow):
     @Slot()  # 加载图像
     def load_image(self):
-        global global_URL, changeURL, search_status
+        global global_URL, changeURL, search_status, keyword
         # 在用户点击下一页后启用上一页按钮
         if not self.ui.prev_button.isEnabled():
             self.ui.prev_button.setEnabled(True)
@@ -36,6 +36,7 @@ class MainWindow(QMainWindow):
                 self.total_count = 0
                 # 操作完毕后将请求状态切换为否
                 changeURL = False
+                keyword = ""
                 self.ui.prev_button.setEnabled(False)
         if keyword and search_status:
             if os.path.exists("temp"):
@@ -45,15 +46,15 @@ class MainWindow(QMainWindow):
             search_status = False
             self.ui.prev_button.setEnabled(False)
         self.up = self.total_count + 9
-        if keyword:
+        if not keyword:
             try:
-                thumbnails, self.data, self.names_without_ext, self.names = interface(self.up, search_content=keyword)
+                thumbnails, self.data, self.names_without_ext, self.names = interface(self.up, topic_id)
             except ConnectionError:
                 self.raise_message("网络未连接")
                 sys.exit(app.exit())
         else:
             try:
-                thumbnails, self.data, self.names_without_ext, self.names = interface(self.up, topic_id)
+                thumbnails, self.data, self.names_without_ext, self.names = interface(self.up, search_content=keyword)
             except ConnectionError:
                 self.raise_message("网络未连接")
                 sys.exit(app.exit())
