@@ -15,11 +15,14 @@ import shutil
 class MainWindow(QMainWindow):
     @Slot()  # 加载图像
     def load_image(self):
-        global global_URL
+        global global_URL, changeURL, search_status
+        # 在用户点击下一页后启用上一页按钮
+        if not self.ui.prev_button.isEnabled():
+            self.ui.prev_button.setEnabled(True)
         # 预先声明topic_id避免unbounded error
         topic_id = ""
         # 判断是否存在新的url 是否请求切换地址
-        if global_URL and self.changeURL:
+        if global_URL and changeURL:
             # 检查是否为bilibili动态链接
             if "t.bilibili.com" in global_URL:
                 if not global_URL.endswith("/"):
@@ -27,29 +30,30 @@ class MainWindow(QMainWindow):
                 # 提取topic_id
                 topic_id = global_URL[global_URL.find("topic") + len("topic") + 1: -1]
                 # 刷新缓存的变量
-                shutil.rmtree("temp")
+                if os.path.exists("temp"):
+                    shutil.rmtree("temp")
                 self.names_without_ext = self.names = self.data = None
                 self.total_count = 0
                 # 操作完毕后将请求状态切换为否
-                self.changeURL = False
-        if keyword and self.search_status:
-            shutil.rmtree("temp")
+                changeURL = False
+                self.ui.prev_button.setEnabled(False)
+        if keyword and search_status:
+            if os.path.exists("temp"):
+                shutil.rmtree("temp")
             self.names_without_ext = self.names = self.data = None
             self.total_count = 0
-            self.search_status = False
-        # 在用户点击下一页后启用上一页按钮
-        if not self.ui.prev_button.isEnabled():
-            self.ui.prev_button.setEnabled(True)
+            search_status = False
+            self.ui.prev_button.setEnabled(False)
         self.up = self.total_count + 9
-        if not keyword:
+        if keyword:
             try:
-                thumbnails, self.data, self.names_without_ext, self.names = interface(self.up, topic_id)
+                thumbnails, self.data, self.names_without_ext, self.names = interface(self.up, search_content=keyword)
             except ConnectionError:
                 self.raise_message("网络未连接")
                 sys.exit(app.exit())
         else:
             try:
-                thumbnails, self.data, self.names_without_ext, self.names = interface(self.up, search_content=keyword)
+                thumbnails, self.data, self.names_without_ext, self.names = interface(self.up, topic_id)
             except ConnectionError:
                 self.raise_message("网络未连接")
                 sys.exit(app.exit())
@@ -110,8 +114,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.search_status = None
-        self.names_without_ext = self.names = self.data = self.up = self.low = self.index = self.changeURL = None
+        self.names_without_ext = self.names = self.data = self.up = self.low = self.index = None
         self.save_path = os.getcwd()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -193,7 +196,6 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def search_service_helper(self):
-        self.search_status = True
         dialog = URLDialog()
         dialog.setWindowTitle("搜索")
         dialog.ui.label.setText("请输入要搜索的up主")
@@ -221,7 +223,6 @@ class MainWindow(QMainWindow):
         # 绑定信号 获取输入的内容并请求切换
         dialog.ui.buttonBox.accepted.connect(dialog.get_url)
         dialog.ui.buttonBox.accepted.connect(self.load_image)
-        self.changeURL = True
         dialog.show()
         dialog.exec()
 
@@ -242,18 +243,21 @@ class URLDialog(QDialog):
 
     @Slot()
     def get_url(self):
-        global global_URL
+        global global_URL, changeURL
         global_URL = self.ui.lineEdit.text()
+        changeURL = True
 
     @Slot()
     def get_keyword(self):
-        global keyword
+        global keyword, search_status
         keyword = self.ui.lineEdit.text()
+        search_status = True
 
 
 if __name__ == "__main__":
     global_URL = ""
     keyword = ""
+    changeURL = search_status = False
     app = QApplication(sys.argv)
     window = MainWindow()
     app.exec()
