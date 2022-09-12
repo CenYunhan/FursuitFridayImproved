@@ -1,18 +1,52 @@
-from PySide6.QtCore import Slot, Qt
-from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QApplication, QMainWindow, QDialog, QFileDialog, QMessageBox
-from framework import Ui_MainWindow
-from dialog_about import Ui_Dialog
-from dialog_user_input import Ui_Dialog as Ui_URL
-from core_utilities import interface
-from urllib.request import urlretrieve
-import urllib.error
-import sys
 import os
 import shutil
+import sys
+import urllib.error
+from urllib.request import urlretrieve
+
+from PySide6.QtCore import Qt, Slot
+from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import (QApplication, QDialog, QFileDialog, QMainWindow,
+                               QMessageBox)
+
+from core_utilities import interface
+from UI.dialog_about import Ui_Dialog
+from UI.dialog_user_input import Ui_Dialog as Ui_URL
+from UI.framework import Ui_MainWindow
 
 
 class MainWindow(QMainWindow):
+    def __init__(self):
+        super(MainWindow, self).__init__()
+        self.names_without_ext = self.names = self.data = self.up = self.low = self.index = None
+        self.save_path = os.getcwd()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.messagebox = QMessageBox()
+        self.setWindowTitle("FursuitFriday Improved")
+        self.total_count = 0
+        self.load_image()
+        self.ui.next_button.clicked.connect(self.load_image)
+        self.ui.prev_button.clicked.connect(self.prev)
+        # 将所有的复选框与信号绑定
+        for value in range(1, 10):
+            command = "self.ui.checkBox_" + str(value) + ".stateChanged.connect(self.checkbox)"
+            exec(command)
+        self.ui.prev_button.setEnabled(False)
+        self.ui.action_about.triggered.connect(self.raise_about)
+        self.ui.action_change_folder.triggered.connect(self.open_file_dialog)
+        self.ui.action_download.triggered.connect(self.ui_download)
+        self.ui.action_exit_app.triggered.connect(self.close)
+        self.ui.action_URL.triggered.connect(self.raise_url_change_dialog)
+        self.ui.action_select_all.triggered.connect(self.select_all_images)
+        self.ui.action_Search.triggered.connect(self.search_service_helper)
+
+        """
+        names保存了后端整理后的文件名 用于下载器保存;names_without_ext和names相同 但不带扩展名 用于标题的展示
+        self.data保存了整理后图片的url等信息
+        self.total_count,self.up对应当前的图片数量,下一次应该加载的数量
+        """
+
     @Slot()  # 加载图像
     def load_image(self):
         global global_URL, changeURL, search_status, keyword
@@ -112,37 +146,6 @@ class MainWindow(QMainWindow):
             for command in commands:
                 exec(command)
             locale_low += 1
-
-    def __init__(self):
-        super(MainWindow, self).__init__()
-        self.names_without_ext = self.names = self.data = self.up = self.low = self.index = None
-        self.save_path = os.getcwd()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
-        self.messagebox = QMessageBox()
-        self.setWindowTitle("FursuitFriday Improved")
-        self.total_count = 0
-        self.load_image()
-        self.ui.next_button.clicked.connect(self.load_image)
-        self.ui.prev_button.clicked.connect(self.prev)
-        # 将所有的复选框与信号绑定
-        for value in range(1, 10):
-            command = "self.ui.checkBox_" + str(value) + ".stateChanged.connect(self.checkbox)"
-            exec(command)
-        self.ui.prev_button.setEnabled(False)
-        self.ui.action_about.triggered.connect(self.raise_about)
-        self.ui.action_change_folder.triggered.connect(self.open_file_dialog)
-        self.ui.action_download.triggered.connect(self.ui_download)
-        self.ui.action_exit_app.triggered.connect(self.close)
-        self.ui.action_URL.triggered.connect(self.raise_url_change_dialog)
-        self.ui.action_select_all.triggered.connect(self.select_all_images)
-        self.ui.action_Search.triggered.connect(self.search_service_helper)
-
-        """
-        names保存了后端整理后的文件名 用于下载器保存;names_without_ext和names相同 但不带扩展名 用于标题的展示
-        self.data保存了整理后图片的url等信息
-        self.total_count,self.up对应当前的图片数量,下一次应该加载的数量
-        """
 
     @Slot()
     def checkbox(self):
