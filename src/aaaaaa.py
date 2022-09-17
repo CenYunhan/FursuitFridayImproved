@@ -12,9 +12,16 @@ REQUEST_TIME_INTERVAL: float = 7.0
 
 @dataclasses.dataclass(frozen=True)
 class ImageInfo:
+    '''
+    数据类，用于记录图片信息，并按动态为图片分组，同时记录各组图片发布者的用户名及发布时间。
+    '''
     user_name: str
     post_time: str
     image_uris: Tuple[str]
+
+    @property
+    def thumbnail_uris(self) -> Tuple[str]:
+        return tuple(uri + '@104w_104h' for uri in self.image_uris)  # type: ignore[return-value]
 
 
 class PostListPraser:
@@ -27,7 +34,7 @@ class PostListPraser:
         self.topic_id: int = topic_id
         self.offset: int = 0
         self.has_more: bool = True
-        self.last_request_time: float = time.monotonic()
+        self.last_request_time: float = time.monotonic() - REQUEST_TIME_INTERVAL
 
     def __fetch_topic_data(self) -> requests.Response:
         '''通过发送HTTPS请求获取数据'''
@@ -69,9 +76,12 @@ class PostListPraser:
 if __name__ == '__main__':
     from pprint import pprint
     x = PostListPraser(8807683)
-    count = 5
+    count = 3
     while count:
         print(f'count = {count}')
         pprint(next(x))
         print()
         count -= 1
+    else:
+        print('thumbnail:')
+        pprint([info.thumbnail_uris for info in next(x)])
