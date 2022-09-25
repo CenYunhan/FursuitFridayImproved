@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'framework.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.3.0
+## Created by: Qt User Interface Compiler version 6.3.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -43,8 +43,8 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.horizontalLayout_5 = QHBoxLayout()
-        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_1_2 = QHBoxLayout()
+        self.horizontalLayout_1_2.setObjectName(u"horizontalLayout_1_2")
         self.checkBox_1 = QCheckBox(self.centralwidget)
         self.checkBox_1.setObjectName(u"checkBox_1")
         sizePolicy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Maximum)
@@ -54,7 +54,7 @@ class Ui_MainWindow(object):
         self.checkBox_1.setSizePolicy(sizePolicy)
         self.checkBox_1.setMaximumSize(QSize(16777215, 13))
 
-        self.horizontalLayout_5.addWidget(self.checkBox_1)
+        self.horizontalLayout_1_2.addWidget(self.checkBox_1)
 
         self.checkBox_2 = QCheckBox(self.centralwidget)
         self.checkBox_2.setObjectName(u"checkBox_2")
@@ -62,7 +62,7 @@ class Ui_MainWindow(object):
         self.checkBox_2.setSizePolicy(sizePolicy)
         self.checkBox_2.setMaximumSize(QSize(16777215, 13))
 
-        self.horizontalLayout_5.addWidget(self.checkBox_2)
+        self.horizontalLayout_1_2.addWidget(self.checkBox_2)
 
         self.checkBox_3 = QCheckBox(self.centralwidget)
         self.checkBox_3.setObjectName(u"checkBox_3")
@@ -70,104 +70,122 @@ class Ui_MainWindow(object):
         self.checkBox_3.setSizePolicy(sizePolicy)
         self.checkBox_3.setMaximumSize(QSize(16777215, 13))
 
-        self.horizontalLayout_5.addWidget(self.checkBox_3)
+        self.horizontalLayout_1_2.addWidget(self.checkBox_3)
 
 
-        self.gridLayout.addLayout(self.horizontalLayout_5, 1, 0, 1, 1)
+        self.gridLayout.addLayout(self.horizontalLayout_1_2, 1, 0, 1, 1)
 
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout_1_1 = QHBoxLayout()
+        self.horizontalLayout_1_1.setObjectName(u"horizontalLayout_1_1")
         self.label_1 = QLabel(self.centralwidget)
         self.label_1.setObjectName(u"label_1")
+        self.label_1.setEnabled(False)
         sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.label_1.sizePolicy().hasHeightForWidth())
         self.label_1.setSizePolicy(sizePolicy1)
+        self.label_1.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout.addWidget(self.label_1)
+        self.horizontalLayout_1_1.addWidget(self.label_1)
 
         self.label_2 = QLabel(self.centralwidget)
         self.label_2.setObjectName(u"label_2")
+        self.label_2.setEnabled(False)
         sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
         self.label_2.setSizePolicy(sizePolicy2)
+        self.label_2.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout.addWidget(self.label_2)
+        self.horizontalLayout_1_1.addWidget(self.label_2)
 
         self.label_3 = QLabel(self.centralwidget)
         self.label_3.setObjectName(u"label_3")
+        self.label_3.setEnabled(False)
         sizePolicy2.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
         self.label_3.setSizePolicy(sizePolicy2)
+        self.label_3.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout.addWidget(self.label_3)
+        self.horizontalLayout_1_1.addWidget(self.label_3)
 
 
-        self.gridLayout.addLayout(self.horizontalLayout, 0, 0, 1, 1)
+        self.gridLayout.addLayout(self.horizontalLayout_1_1, 0, 0, 1, 1)
 
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.horizontalLayout_3_1 = QHBoxLayout()
+        self.horizontalLayout_3_1.setObjectName(u"horizontalLayout_3_1")
         self.label_7 = QLabel(self.centralwidget)
         self.label_7.setObjectName(u"label_7")
+        self.label_7.setEnabled(False)
         sizePolicy2.setHeightForWidth(self.label_7.sizePolicy().hasHeightForWidth())
         self.label_7.setSizePolicy(sizePolicy2)
+        self.label_7.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_3.addWidget(self.label_7)
+        self.horizontalLayout_3_1.addWidget(self.label_7)
 
         self.label_8 = QLabel(self.centralwidget)
         self.label_8.setObjectName(u"label_8")
+        self.label_8.setEnabled(False)
         sizePolicy2.setHeightForWidth(self.label_8.sizePolicy().hasHeightForWidth())
         self.label_8.setSizePolicy(sizePolicy2)
+        self.label_8.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_3.addWidget(self.label_8)
+        self.horizontalLayout_3_1.addWidget(self.label_8)
 
         self.label_9 = QLabel(self.centralwidget)
         self.label_9.setObjectName(u"label_9")
+        self.label_9.setEnabled(False)
         sizePolicy2.setHeightForWidth(self.label_9.sizePolicy().hasHeightForWidth())
         self.label_9.setSizePolicy(sizePolicy2)
+        self.label_9.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_3.addWidget(self.label_9)
+        self.horizontalLayout_3_1.addWidget(self.label_9)
 
 
-        self.gridLayout.addLayout(self.horizontalLayout_3, 4, 0, 1, 1)
+        self.gridLayout.addLayout(self.horizontalLayout_3_1, 4, 0, 1, 1)
 
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_2_1 = QHBoxLayout()
+        self.horizontalLayout_2_1.setObjectName(u"horizontalLayout_2_1")
         self.label_4 = QLabel(self.centralwidget)
         self.label_4.setObjectName(u"label_4")
+        self.label_4.setEnabled(False)
         sizePolicy2.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
         self.label_4.setSizePolicy(sizePolicy2)
+        self.label_4.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_2.addWidget(self.label_4)
+        self.horizontalLayout_2_1.addWidget(self.label_4)
 
         self.label_5 = QLabel(self.centralwidget)
         self.label_5.setObjectName(u"label_5")
+        self.label_5.setEnabled(False)
         sizePolicy2.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
         self.label_5.setSizePolicy(sizePolicy2)
+        self.label_5.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_2.addWidget(self.label_5)
+        self.horizontalLayout_2_1.addWidget(self.label_5)
 
         self.label_6 = QLabel(self.centralwidget)
         self.label_6.setObjectName(u"label_6")
+        self.label_6.setEnabled(False)
         sizePolicy1.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
         self.label_6.setSizePolicy(sizePolicy1)
+        self.label_6.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_2.addWidget(self.label_6)
+        self.horizontalLayout_2_1.addWidget(self.label_6)
 
 
-        self.gridLayout.addLayout(self.horizontalLayout_2, 2, 0, 1, 1)
+        self.gridLayout.addLayout(self.horizontalLayout_2_1, 2, 0, 1, 1)
 
-        self.horizontalLayout_7 = QHBoxLayout()
-        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.horizontalLayout_2_2 = QHBoxLayout()
+        self.horizontalLayout_2_2.setObjectName(u"horizontalLayout_2_2")
         self.checkBox_4 = QCheckBox(self.centralwidget)
         self.checkBox_4.setObjectName(u"checkBox_4")
         sizePolicy.setHeightForWidth(self.checkBox_4.sizePolicy().hasHeightForWidth())
         self.checkBox_4.setSizePolicy(sizePolicy)
         self.checkBox_4.setMaximumSize(QSize(16777215, 13))
 
-        self.horizontalLayout_7.addWidget(self.checkBox_4)
+        self.horizontalLayout_2_2.addWidget(self.checkBox_4)
 
         self.checkBox_5 = QCheckBox(self.centralwidget)
         self.checkBox_5.setObjectName(u"checkBox_5")
@@ -175,7 +193,7 @@ class Ui_MainWindow(object):
         self.checkBox_5.setSizePolicy(sizePolicy)
         self.checkBox_5.setMaximumSize(QSize(16777215, 13))
 
-        self.horizontalLayout_7.addWidget(self.checkBox_5)
+        self.horizontalLayout_2_2.addWidget(self.checkBox_5)
 
         self.checkBox_6 = QCheckBox(self.centralwidget)
         self.checkBox_6.setObjectName(u"checkBox_6")
@@ -183,10 +201,10 @@ class Ui_MainWindow(object):
         self.checkBox_6.setSizePolicy(sizePolicy)
         self.checkBox_6.setMaximumSize(QSize(16777215, 13))
 
-        self.horizontalLayout_7.addWidget(self.checkBox_6)
+        self.horizontalLayout_2_2.addWidget(self.checkBox_6)
 
 
-        self.gridLayout.addLayout(self.horizontalLayout_7, 3, 0, 1, 1)
+        self.gridLayout.addLayout(self.horizontalLayout_2_2, 3, 0, 1, 1)
 
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
@@ -203,15 +221,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addLayout(self.horizontalLayout_4, 8, 0, 1, 1)
 
-        self.horizontalLayout_6 = QHBoxLayout()
-        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.horizontalLayout_3_2 = QHBoxLayout()
+        self.horizontalLayout_3_2.setObjectName(u"horizontalLayout_3_2")
         self.checkBox_7 = QCheckBox(self.centralwidget)
         self.checkBox_7.setObjectName(u"checkBox_7")
         sizePolicy.setHeightForWidth(self.checkBox_7.sizePolicy().hasHeightForWidth())
         self.checkBox_7.setSizePolicy(sizePolicy)
         self.checkBox_7.setMaximumSize(QSize(16777215, 13))
 
-        self.horizontalLayout_6.addWidget(self.checkBox_7)
+        self.horizontalLayout_3_2.addWidget(self.checkBox_7)
 
         self.checkBox_8 = QCheckBox(self.centralwidget)
         self.checkBox_8.setObjectName(u"checkBox_8")
@@ -219,7 +237,7 @@ class Ui_MainWindow(object):
         self.checkBox_8.setSizePolicy(sizePolicy)
         self.checkBox_8.setMaximumSize(QSize(16777215, 13))
 
-        self.horizontalLayout_6.addWidget(self.checkBox_8)
+        self.horizontalLayout_3_2.addWidget(self.checkBox_8)
 
         self.checkBox_9 = QCheckBox(self.centralwidget)
         self.checkBox_9.setObjectName(u"checkBox_9")
@@ -227,10 +245,10 @@ class Ui_MainWindow(object):
         self.checkBox_9.setSizePolicy(sizePolicy)
         self.checkBox_9.setMaximumSize(QSize(16777215, 13))
 
-        self.horizontalLayout_6.addWidget(self.checkBox_9)
+        self.horizontalLayout_3_2.addWidget(self.checkBox_9)
 
 
-        self.gridLayout.addLayout(self.horizontalLayout_6, 6, 0, 1, 1)
+        self.gridLayout.addLayout(self.horizontalLayout_3_2, 6, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menuBar = QMenuBar(MainWindow)
@@ -238,7 +256,7 @@ class Ui_MainWindow(object):
         self.menuBar.setGeometry(QRect(0, 0, 476, 22))
         self.menu = QMenu(self.menuBar)
         self.menu.setObjectName(u"menu")
-        self.menu.setGeometry(QRect(158, 126, 151, 204))
+        self.menu.setGeometry(QRect(158, 126, 149, 186))
         MainWindow.setMenuBar(self.menuBar)
 
         self.menuBar.addAction(self.menu.menuAction())
@@ -252,6 +270,15 @@ class Ui_MainWindow(object):
         self.menu.addAction(self.action_exit_app)
 
         self.retranslateUi(MainWindow)
+        self.checkBox_1.toggled.connect(self.label_1.setEnabled)
+        self.checkBox_2.toggled.connect(self.label_2.setEnabled)
+        self.checkBox_3.toggled.connect(self.label_3.setEnabled)
+        self.checkBox_4.toggled.connect(self.label_4.setEnabled)
+        self.checkBox_5.toggled.connect(self.label_5.setEnabled)
+        self.checkBox_6.toggled.connect(self.label_6.setEnabled)
+        self.checkBox_7.toggled.connect(self.label_7.setEnabled)
+        self.checkBox_8.toggled.connect(self.label_8.setEnabled)
+        self.checkBox_9.toggled.connect(self.label_9.setEnabled)
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
