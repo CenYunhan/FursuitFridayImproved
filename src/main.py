@@ -1,18 +1,56 @@
-from PySide6.QtCore import Slot, Qt
-from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QApplication, QMainWindow, QDialog, QFileDialog, QMessageBox
-from framework import Ui_MainWindow
-from dialog_about import Ui_Dialog
-from dialog_user_input import Ui_Dialog as Ui_URL
-from core_utilities import interface
-from urllib.request import urlretrieve
-import urllib.error
-import sys
 import os
 import shutil
+import sys
+import urllib.error
+from collections import deque
+from urllib.request import urlretrieve
+
+from PySide6.QtCore import Slot
+from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import (QApplication, QDialog, QFileDialog, QMainWindow,
+                               QMessageBox)
+
+from core_utilities import interface
+from UI.dialog_about import Ui_Dialog
+from UI.dialog_user_input import Ui_Dialog as Ui_URL
+from UI.framework import Ui_MainWindow
 
 
 class MainWindow(QMainWindow):
+    def __init__(self):
+        # 设置UI与子窗口
+        super(MainWindow, self).__init__()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.setWindowTitle('FursuitFriday Improved')
+        self.messagebox = QMessageBox()
+        self.about = About()
+        self.about.setWindowTitle('关于')
+
+        # 绑定信号
+        self.ui.next_button.clicked.connect(self.load_image)
+        self.ui.prev_button.clicked.connect(self.prev)
+        self.ui.action_about.triggered.connect(self.raise_about)
+        self.ui.action_change_folder.triggered.connect(self.open_file_dialog)
+        self.ui.action_download.triggered.connect(self.ui_download)
+        self.ui.action_exit_app.triggered.connect(self.close)
+        self.ui.action_URL.triggered.connect(self.raise_url_change_dialog)
+        self.ui.action_select_all.triggered.connect(self.select_all_images)
+        self.ui.action_Search.triggered.connect(self.search_service_helper)
+
+        # 其余初始化操作
+        self.names_without_ext = self.names = self.data = self.up = self.low = None
+        self.save_path = os.getcwd()
+        self.total_count = 0
+        self.load_image()
+        self.ui.prev_button.setEnabled(False)
+
+        """
+        names保存了后端整理后的文件名 用于下载器保存;names_without_ext和names相同 但不带扩展名 用于标题的展示
+        self.data保存了整理后图片的url等信息
+        self.total_count,self.up对应当前的图片数量,下一次应该加载的数量
+        """
+
     @Slot()  # 加载图像
     def load_image(self):
         global global_URL, changeURL, search_status, keyword
@@ -75,16 +113,9 @@ class MainWindow(QMainWindow):
             if not os.path.exists(file_name):
                 urlretrieve(item, file_name)
             # print(file_name)
-            image_label_controller = "self.ui.label_" + str(index) + '.setPixmap(QPixmap(file_name))'
-            status = "self.ui.label_" + str(index) + ".setEnabled(False)"
-            checkbox_controller = "self.ui.checkBox_" + str(index) + ".setChecked(False)"
-            order = "self.ui.label_" + str(index) + ".setAlignment(Qt.AlignCenter)"
-            change_name = "self.ui.checkBox_" + str(index) + \
-                          ".setText('" + self.names_without_ext[self.total_count] + "')"
-
-            commands = [image_label_controller, status, checkbox_controller, order, change_name]
-            for command in commands:
-                exec(command)
+            self.ui.__dict__[f'label_{index}'].setPixmap(QPixmap(file_name))
+            self.ui.__dict__[f'checkBox_{index}'].setChecked(False)
+            self.ui.__dict__[f'checkBox_{index}'].setText(self.names_without_ext[self.total_count])
             self.total_count += 1
         self.show()
 
@@ -101,67 +132,19 @@ class MainWindow(QMainWindow):
             index += 1
             # print(item)
             file_name = os.path.join(os.path.abspath("temp"), str(item) + ".webp")
-            image_label_controller = "self.ui.label_" + str(index) + '.setPixmap(QPixmap(file_name))'
-            status = "self.ui.label_" + str(index) + ".setEnabled(False)"
-            checkbox_controller = "self.ui.checkBox_" + str(index) + ".setChecked(False)"
-            change_name = "self.ui.checkBox_" + str(index) + \
-                          ".setText('" + self.names_without_ext[locale_low - 1] + "')"
-
-            # print(image_label_controller)
-            commands = [image_label_controller, status, checkbox_controller, change_name]
-            for command in commands:
-                exec(command)
+            self.ui.__dict__[f'label_{index}'].setPixmap(QPixmap(file_name))
+            self.ui.__dict__[f'checkBox_{index}'].setChecked(False)
+            self.ui.__dict__[f'checkBox_{index}'].setText(self.names_without_ext[locale_low - 1])
             locale_low += 1
-
-    def __init__(self):
-        super(MainWindow, self).__init__()
-        self.names_without_ext = self.names = self.data = self.up = self.low = self.index = None
-        self.save_path = os.getcwd()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
-        self.messagebox = QMessageBox()
-        self.setWindowTitle("FursuitFriday Improved")
-        self.total_count = 0
-        self.load_image()
-        self.ui.next_button.clicked.connect(self.load_image)
-        self.ui.prev_button.clicked.connect(self.prev)
-        # 将所有的复选框与信号绑定
-        for value in range(1, 10):
-            command = "self.ui.checkBox_" + str(value) + ".stateChanged.connect(self.checkbox)"
-            exec(command)
-        self.ui.prev_button.setEnabled(False)
-        self.ui.action_about.triggered.connect(self.raise_about)
-        self.ui.action_change_folder.triggered.connect(self.open_file_dialog)
-        self.ui.action_download.triggered.connect(self.ui_download)
-        self.ui.action_exit_app.triggered.connect(self.close)
-        self.ui.action_URL.triggered.connect(self.raise_url_change_dialog)
-        self.ui.action_select_all.triggered.connect(self.select_all_images)
-        self.ui.action_Search.triggered.connect(self.search_service_helper)
-
-        """
-        names保存了后端整理后的文件名 用于下载器保存;names_without_ext和names相同 但不带扩展名 用于标题的展示
-        self.data保存了整理后图片的url等信息
-        self.total_count,self.up对应当前的图片数量,下一次应该加载的数量
-        """
-
-    @Slot()
-    def checkbox(self):
-        for value in range(1, 10):
-            photo_status = ("self.ui.label_" + str(value) + ".setEnabled(True) if self.ui.checkBox_" +
-                            str(value) + ".isChecked() else self.ui.label_" + str(value) + ".setEnabled(False)")
-            exec(photo_status)
 
     @Slot()
     def ui_download(self):
-        requires = []
+        requires = deque()
         count = 0
         self.low = self.total_count - 9
-        for value in range(1, 10):
-            photo_status = ("self.index = self.low + " + str(value) + " if self.ui.checkBox_" +
-                            str(value) + ".isChecked() else self.ui.label_" + str(value) + ".setEnabled(False)")
-            exec(photo_status)
-            if self.index is not None:
-                requires.append(self.index)
+        for index in range(1, 10):
+            if self.ui.__dict__[f'checkBox_{index}'].isChecked():
+                requires.append(self.low + index)
         # print(requires)
         if requires:
             self.raise_message("已经开始下载,请自行检查文件夹\n" + self.save_path)
@@ -170,7 +153,7 @@ class MainWindow(QMainWindow):
             temporal_count = count
             count += len(images)
             while requires:
-                photo_index = requires[0]
+                photo_index = requires.popleft()
                 if count >= photo_index:
                     # print(self.total_count)
                     target = images[photo_index - temporal_count - 1]
@@ -178,7 +161,6 @@ class MainWindow(QMainWindow):
                         urlretrieve(target, os.path.join(self.save_path, self.names[photo_index - 1]))
                     except urllib.error.URLError:
                         self.raise_message("网络未连接")
-                    requires.pop(0)
                 else:
                     break
 
@@ -189,11 +171,7 @@ class MainWindow(QMainWindow):
     @Slot()
     def select_all_images(self):
         for index in range(1, 10):
-            status = "self.ui.label_" + str(index) + ".setEnabled(True)"
-            checkbox_controller = "self.ui.checkBox_" + str(index) + ".setChecked(True)"
-            commands = [status, checkbox_controller]
-            for command in commands:
-                exec(command)
+            self.ui.__dict__[f'checkBox_{index}'].setChecked(True)
 
     @Slot()
     def search_service_helper(self):
@@ -207,10 +185,7 @@ class MainWindow(QMainWindow):
 
     @Slot()
     def raise_about(self):
-        dialog = About()
-        dialog.setWindowTitle("关于")
-        dialog.show()
-        dialog.exec()
+        self.about.show()
 
     @Slot()
     def raise_message(self, message):
